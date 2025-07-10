@@ -6,16 +6,17 @@ ANAT_DIR=$1
 SUBJECT_ID=$2
 OUT_DIR=$3
 
-micapipe_simg=${singularities}/micapipe-v0.2.3.simg
+micapipe_simg=${SING_DIR}/micapipe-v0.2.3.simg
+ls $TOOLBOX_BIN
 
 for m in T1w T2w ; do
 
     # Create T1 and T2 average across all available runs
     singularity exec -B $ANAT_DIR:/anat_dir \
                 -B $OUT_DIR/$SUBJECT_ID/:/out_dir \
-                -B ${TOOLBOX_BIN}/:/bin \
+                -B ${TOOLBOX_BIN}/:/toolbox_bin \
                 "${micapipe_simg}" \
-                bin/anatomical_average.sh "$m"
+                /toolbox_bin/anatomical_average.sh "$m"
 
     # Apply bias correction
     mri_nu_correct.mni --i $OUT_DIR/$SUBJECT_ID/${m}.nii.gz --o $OUT_DIR/$SUBJECT_ID/${m}_BC.nii.gz

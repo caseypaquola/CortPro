@@ -4,11 +4,11 @@ import numpy as np
 import nibabel as nib
 from scipy.stats import skew, kurtosis
 
-def load_MP(OUTPUT_DIR, SUBJECT_ID, hemis=['lh', 'rh'], n_surfaces=14):
+def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, hemis=['lh', 'rh']):
     MP_list = []
 
     for hemi in hemis:
-        for n in range(1, n_surfaces + 1):
+        for n in range(1, NUM_SURFACES + 1):
             filename = os.path.join(
                 OUTPUT_DIR,
                 SUBJECT_ID,
@@ -63,9 +63,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--subject_id", required=True)
+    parser.add_argument("--num_surfaces", required=True)
     args = parser.parse_args()
 
-    MP = load_MP(args.output_dir, args.subject_id)
+    MP = load_MP(args.output_dir, args.subject_id, args.num_surfaces)
     MPmoments = calculate_moments(MP)
 
     # Save result
