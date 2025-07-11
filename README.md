@@ -36,7 +36,7 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
   --fs-dir /path/to/freesurfer \
   --sing-dir /path/to/singularity \
   [--micro-image /path/to/micro.nii.gz] \
-  [--anat-dir /path/to/bids/anat] \
+  [--anat-dir /path/to/bids/sub-001/anat] \
   [--num-surfaces 14]```
 
 #Required Arguments
