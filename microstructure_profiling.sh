@@ -166,66 +166,77 @@ rm -rfv ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.0.0.pial ${OUTPUT_DIR}/${SUBJECT_ID}
 # -----------------------------
 # Co-register microstructure image
 # -----------------------------
-if [[ "$RESLICE_MICRO" == 1 ]]; then
-    echo "[INFO] Reslicing micro-image to surface space"
-    mri_vol2vol --mov ${MICRO_IMAGE} \
-        --targ ${SUBJECTS_DIR}/${SUBJECT_ID}/mri/rawavg.mgz \
-        --regheader \
-        --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
-        --no-save-reg
-else
-    echo "[INFO] Performing affine registration of micro-image to surface space"
-    cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz
-    singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
-                -B $OUTPUT_DIR/:/out_dir \
-                -B $TOOLBOX_BIN/:/toolbox_bin \
-                "${MICAPIPE_IMG}" \
-                /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
+if [[ ! -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
+    if [[ "$RESLICE_MICRO" == 1 ]]; then
+        echo "[INFO] Reslicing micro-image to surface space"
+        mri_vol2vol --mov ${MICRO_IMAGE} \
+            --targ ${SUBJECTS_DIR}/${SUBJECT_ID}/mri/rawavg.mgz \
+            --regheader \
+            --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
+            --no-save-reg
+    else
+        echo "[INFO] Performing affine registration of micro-image to surface space"
+        cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz
+        singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
+                    -B $OUTPUT_DIR/:/out_dir \
+                    -B $TOOLBOX_BIN/:/toolbox_bin \
+                    "${MICAPIPE_IMG}" \
+                    /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
+    fi
 fi
 
-if [[ -f $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz ]] ; then
 
-# -----------------------------
-# Sample microstructure profiles
-# -----------------------------
-for hemi in lh rh ; do
-    [[ $hemi == lh ]] && HEMI=L || HEMI=R
-        # find all intracortical surfaces, list by creation time, sample intensities and convert to fsaverage5
-        x=$(ls -t ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.0.*)
-        for n in $(seq 1 1 ${NUM_SURFACES}) ; do
-            
-            which_surf=$(sed -n "${n}p" <<< "$x")
-            filename=${which_surf##*/}
-            if [[ ! -f ${SUBJECTS_DIR}/${SUBJECT_ID}/surf/$filename ]] ; then
-                cp $which_surf ${SUBJECTS_DIR}/${SUBJECT_ID}/surf/$filename
-            fi
-            shortname=${filename#*.}
-            
-            # sample along intracortical surface
-            mri_vol2surf --mov "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
-                --regheader ${SUBJECT_ID} \
-                --hemi ${hemi} \
-                --surf $shortname \
-                --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh
-            
-            # transform to fsaverage5
-            mri_surf2surf --hemi ${hemi} \
-                --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh \
-                --trgsubject fsaverage5 --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage5_MP-${n}.mgh
-        done
-    ((Nsteps++))
-done
+if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
+    # -----------------------------
+    # Sample microstructure profiles
+    # -----------------------------
+    # create symbolic link to fsaverage5
+    ln -s $FREESURFER_HOME/subjects/fsaverage5 $SUBJECTS_DIR
 
-##------------------------------------------------------------------------------#
-# Generate MPs for easy reading
-echo "[INFO] Collating microstructure profiles and computing moments for shape analysis"
-singularity exec -B $OUTPUT_DIR/:/out_dir \
-                    "${MICAPIPE_IMG}" \
-                    python3 collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES"
+    for hemi in lh rh ; do
+        [[ $hemi == lh ]] && HEMI=L || HEMI=R
+            # find all intracortical surfaces, list by creation time, sample intensities and convert to fsaverage5
+            x=$(ls -t ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.0.*)
+            for n in $(seq 1 1 ${NUM_SURFACES}) ; do
+                
+                which_surf=$(sed -n "${n}p" <<< "$x")
+                filename=${which_surf##*/}
+                if [[ ! -f ${SUBJECTS_DIR}/${SUBJECT_ID}/surf/$filename ]] ; then
+                    cp $which_surf ${SUBJECTS_DIR}/${SUBJECT_ID}/surf/$filename
+                fi
+                shortname=${filename#*.}
+                
+                # sample along intracortical surface
+                mri_vol2surf --mov "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
+                    --regheader ${SUBJECT_ID} \
+                    --hemi ${hemi} \
+                    --surf $shortname \
+                    --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh \
+                    --interp trilinear
+                
+                # transform to fsaverage5
+                mri_surf2surf --hemi ${hemi} \
+                    --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh \
+                    --trgsubject fsaverage5 --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage5_MP-${n}.mgh
+            done
+        ((Nsteps++))
+    done
 
-##------------------------------------------------------------------------------#
-# Clean up tmp folder and drop datalad files
-#rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
-echo "[INFO] Toolbox completed for subject $SUBJECT_ID."
+    ##------------------------------------------------------------------------------#
+    # Generate MPs for easy reading
+    echo "[INFO] Collating microstructure profiles and computing moments for shape analysis"
+    singularity exec -B $OUTPUT_DIR/:/out_dir \
+                     -B $TOOLBOX_BIN/:/toolbox_bin \
+                        "${MICAPIPE_IMG}" \
+                        python3 /toolbox_bin/collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES"
+
+    ##------------------------------------------------------------------------------#
+    # Clean up tmp folder and drop datalad files
+    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
+    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.pial
+    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*synthseg*
+    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*Warped*
+    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mat
+    echo "[INFO] Toolbox completed for subject $SUBJECT_ID."
 
 fi

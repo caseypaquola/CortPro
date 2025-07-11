@@ -23,13 +23,13 @@ mat_micro2fs_xfm="${str_micro2fs_xfm}0GenericAffine.mat"
 micro_warped="/out_dir/${SUBJECT_ID}_space-fsnative_desc-micro.nii.gz"
 
 # Registrations from t1-fsnative to qMRI
-antsRegistrationSyN.sh -d 3 -f "$img_fixed" -m "$img_moving" -o "$str_qMRI2fs_xfm" -t a -p d -i ["${img_fixed}","${img_moving}",0]
+antsRegistrationSyN.sh -d 3 -f "$img_fixed" -m "$img_moving" -o "$str_micro2fs_xfm" -t a -p d -i ["${img_fixed}","${img_moving}",0]
 
 # Check if transformations file exist
-if [ ! -f "${mat_qMRI2fs_xfm}" ]; then 
+if [ ! -f "${mat_micro2fs_xfm}" ]; then 
   echo "[ERROR] Registration between micro and T1nativepro failed"
   exit
 fi
 
 # Apply transformations: from micro to T1-fsnative
-antsApplyTransforms -d 3 -i "$microImage" -r "$T1_in_fs" -t ${mat_qMRI2fs_xfm} -o "$micro_warped" -v -u int
+antsApplyTransforms -d 3 -i "$MICRO_IMAGE" -r "$T1_in_fs" -t ${mat_micro2fs_xfm} -o "$micro_warped" -v -u int

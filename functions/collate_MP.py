@@ -2,13 +2,27 @@ import os
 import argparse
 import numpy as np
 import nibabel as nib
-from scipy.stats import skew, kurtosis
 
-def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, hemis=['lh', 'rh']):
-    MP_list = []
+def compute_skewness(x):
+    x = x[np.isfinite(x)]  # Optional: remove NaNs or infs
+    mean = np.mean(x)
+    std = np.std(x)
+    skew = np.mean(((x - mean) / std)**3)
+    return skew
 
-    for hemi in hemis:
-        for n in range(1, NUM_SURFACES + 1):
+def compute_kurtosis(x):
+    x = x[np.isfinite(x)]
+    mean = np.mean(x)
+    std = np.std(x)
+    kurt = np.mean(((x - mean) / std)**4) - 3  # excess kurtosis
+    return kurt
+
+def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, hemis=['L', 'R']):
+    MP_rows = []
+
+    for n in range(1, NUM_SURFACES + 1):
+        row_data = []
+        for hemi in hemis:
             filename = os.path.join(
                 OUTPUT_DIR,
                 SUBJECT_ID,
@@ -16,11 +30,15 @@ def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, hemis=['lh', 'rh']):
             )
             print(f"Loading: {filename}")
             img = nib.load(filename)
-            data = np.squeeze(img.get_fdata())  # Remove singleton dimensions
-            MP_list.append(data)
+            data = np.squeeze(img.get_fdata())  # Remove singleton dims
+            row_data.append(data)
 
+        # Concatenate left and right hemisphere horizontally
+        surface_row = np.concatenate(row_data)
+        MP_rows.append(surface_row)
+        
     # Concatenate all surfaces as columns
-    MP = np.stack(MP_list, axis=1)  # shape: (depths, vertices)
+    MP = np.stack(MP_rows, axis=0)  # shape: (depths, vertices)
     return MP
 
 def calculate_moments(MP):
@@ -51,8 +69,8 @@ def calculate_moments(MP):
         raw_data = np.repeat(depth_sampled[:, 0], MP_scaled[:, ii])
         u1[ii] = np.mean(raw_data)
         u2[ii] = np.std(raw_data, ddof=1)
-        u3[ii] = skew(raw_data)
-        u4[ii] = kurtosis(raw_data, fisher=False)
+        u3[ii] = compute_skewness(raw_data)
+        u4[ii] = compute_kurtosis(raw_data)
 
     MPmoments = np.vstack([mean_amplitude, u1, u2, u3, u4])
     return MPmoments
@@ -63,7 +81,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--subject_id", required=True)
-    parser.add_argument("--num_surfaces", required=True)
+    parser.add_argument("--num_surfaces", type=int, required=True)
     args = parser.parse_args()
 
     MP = load_MP(args.output_dir, args.subject_id, args.num_surfaces)
