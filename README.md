@@ -1,10 +1,12 @@
 # 🧠 Microstructure Profiling Toolbox
 
-The **Microstructure Profiling Toolbox** is an open-source pipeline for generating and analyzing intracortical microstructural profiles using structural MRI. It automates surface reconstruction, intracortical surface generation, microstructure image processing, and profile sampling. Designed with reproducibility and flexibility in mind, the toolbox leverages tools like FreeSurfer, Fastsurfer, and Singularity-based containers.
+The **Microstructure Profiling Toolbox** is an open-source pipeline for generating and analysing intracortical microstructure profiles. The only prerequisites for microstructure profiling are (i) an MRI suitable for cortical surface reconstruction (e.g. T1w) and (ii) a microstructure-sensitive volume (e.g. qT1, T1w/T2w, MT). The toolbox streamlines this whole procedure enabling surface reconstruction and T1w/T2w computation, while also accepted preprocessed data in various stages (see examples below).
 
 ---
 
-## 📦 Requirements
+## 📦 Dependencies
+
+To simplify the installation of dependencies, the toolbox uses the micapipe container, which contains software, such as ANTS, FSL and several python packages. 
 
 - **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/))
 - FreeSurfer with valid `license.txt` ([Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall))
@@ -43,7 +45,7 @@ The **Microstructure Profiling Toolbox** is an open-source pipeline for generati
 
 ---
 
-## 🔧 Example commands
+## 🧬 Example commands
 
 ```
 # Case 1: Full run (no preprocessing yet completed)
