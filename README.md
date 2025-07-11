@@ -9,8 +9,8 @@ The **Microstructure Profiling Toolbox** is an open-source pipeline for generati
 - Co-registration of microstructural images to cortical surfaces
 - Flexible adaptation of sampling precision
 - Versatile application to different modalities (even 3D histology)
-- (Optional) copmutation of bias-corrected T1w/T2w images
-- (Optional) Fastsurfer-based surface reconstruction
+- (Optional) Computation of bias-corrected T1w/T2w images
+- (Optional) Cortical surface reconstruction
 
 ---
 
