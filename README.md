@@ -1,6 +1,16 @@
 # 🧠 Microstructure Profiling Toolbox
 
-The **Microstructure Profiling Toolbox** is an open-source pipeline for generating and analysing intracortical microstructure profiles. The only prerequisites for microstructure profiling are (i) an MRI suitable for cortical surface reconstruction (e.g. T1w) and (ii) a microstructure-sensitive volume (e.g. qT1, T1w/T2w, MT). The toolbox streamlines this whole procedure enabling surface reconstruction and T1w/T2w computation, while also accepted preprocessed data in various stages (see examples below).
+The **Microstructure Profiling Toolbox** is an open-source pipeline for generating and analysing intracortical microstructure profiles. The only prerequisites for microstructure profiling are (i) an MRI suitable for cortical surface reconstruction (e.g. T1w) and (ii) a microstructure-sensitive volume (e.g. qT1, T1w/T2w, MT).
+
+---
+
+# 🚀 Toolbox features
+- Generation and characterisation of intracortical microstructure profiles
+- Co-registration of microstructural images to cortical surfaces
+- Flexible adaptation of sampling precision
+- Versatile application to different modalities (even 3D histology)
+- (Optional) copmutation of bias-corrected T1w/T2w images
+- (Optional) Fastsurfer-based surface reconstruction
 
 ---
 
