@@ -6,14 +6,14 @@ The **Microstructure Profiling Toolbox** is an open-source pipeline for generati
 
 ## 📦 Requirements
 
-- **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/)
-- FreeSurfer with valid `license.txt` [Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall)
-- Singularity container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
+- **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/))
+- FreeSurfer with valid `license.txt` ([Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall))
+- Necessary container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
 - Optional container: [`fastsurfer_gpu.sif`](https://deep-mi.org/FastSurfer/dev/overview/singularity.html) (if FreeSurfer output is missing)
 
 ---
 
-## 🔧 Usage
+## 🔧 General usage
 
 ```
 # Run from top directory of this cloned github repo
@@ -39,3 +39,20 @@ The **Microstructure Profiling Toolbox** is an open-source pipeline for generati
 --anat-dir	BIDS anatomical directory (needed if --micro-image is not provided or surfaces need to be created)
 --num-surfaces	Number of intracortical surfaces (default: 14)
 -h, --help	Show help message
+
+---
+
+## 🔧 Example commands
+
+```
+# Case 1: Full run (no preprocessing yet completed)
+./microstructure_profiling.sh --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+# Case 2: Precomputed micro-image, but no FreeSurfer output available
+./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+# Case 3: FreeSurfer output available, as well as a T1 and T2 (not yet a T1w/T2w)
+./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+# Case 4: Freesurfer output and micro-image both already available
+./microstructure_profiling.sh --micro-image $micro_image --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
