@@ -39,6 +39,7 @@ The **Microstructure Profiling Toolbox** is an open-source pipeline for generati
 --anat-dir	BIDS anatomical directory (needed if --micro-image is not provided or surfaces need to be created)
 --num-surfaces	Number of intracortical surfaces (default: 14)
 -h, --help	Show help message
+```
 
 ---
 
