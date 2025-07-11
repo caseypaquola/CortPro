@@ -1,44 +1,23 @@
 # 🧠 Microstructure Profiling Toolbox
 
-The **Microstructure Profiling Toolbox** is an open-source pipeline for generating and analyzing intracortical microstructural profiles using anatomical MRI. It automates surface reconstruction, intracortical surface generation, microstructure image processing, and profile sampling. Designed with reproducibility and flexibility in mind, the toolbox leverages tools like FreeSurfer, Fastsurfer, and Singularity-based containers.
-
----
-
-## 🚀 Features
-
-- Automatic generation of T1w/T2w ratio images
-- Fastsurfer-based surface reconstruction (if FreeSurfer data is missing)
-- Generation of intracortical equivolumetric surfaces
-- Co-registration of microstructural images to cortical surfaces
-- Sampling of microstructure across cortical depths
-- Projection to standard space (`fsaverage5`)
-- Extraction of statistical moments from profiles
+The **Microstructure Profiling Toolbox** is an open-source pipeline for generating and analyzing intracortical microstructural profiles using structural MRI. It automates surface reconstruction, intracortical surface generation, microstructure image processing, and profile sampling. Designed with reproducibility and flexibility in mind, the toolbox leverages tools like FreeSurfer, Fastsurfer, and Singularity-based containers.
 
 ---
 
 ## 📦 Requirements
 
-- **Singularity** installed and available on `$PATH` [Install instructions](https://sylabs.io/guides/latest/user-guide/)
-- FreeSurfer with valid `license.txt` [Download](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall)
-- Singularity container: `micapipe-v0.2.3.simg`
-- Optional container: `fastsurfer_gpu.sif` (if FreeSurfer output is missing)
-
----
-
-## 📂 Directory Structure
-
-```text
-toolbox_root/
-├── microstructure_profiling.sh     # Main entry point
-├── functions/                      # Helper scripts (e.g., compute_t1t2_ratio.sh, run_fastsurfer.sh)
-├── micapipe-v0.2.3.simg            # Singularity image
-└── README.md                       # You're here
+- **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/)
+- FreeSurfer with valid `license.txt` [Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall)
+- Singularity container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
+- Optional container: [`fastsurfer_gpu.sif`](https://deep-mi.org/FastSurfer/dev/overview/singularity.html) (if FreeSurfer output is missing)
 
 ---
 
 ## 🔧 Usage
 
-```bash microstructure_profiling.sh \
+```
+# Run from top directory of this cloned github repo
+./microstructure_profiling.sh \
   --subject-id sub-001 \
   --subjects-dir /path/to/subjects_dir \
   --output-dir /path/to/output \
