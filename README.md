@@ -81,3 +81,13 @@ cd /data/group/mune/shortmp/microstructure_profiling/
 
 # Case 4: Freesurfer output and micro-image both already available
 ./microstructure_profiling.sh --micro-image $micro_image --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+```
+
+---
+
+## Output
+
+The key outputs of the toolbox are two .csv files
+- MP: represents changes in intensity dowm cortical depths (rows = depths, columns = vertices on fsaverage5)
+- MPmoments: shape characterisation of the profiles based on moments (rows = u0-u4, columnes = vertices on fsaverage5)
