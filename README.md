@@ -31,12 +31,12 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 # Run from top directory of this cloned github repo
 ./microstructure_profiling.sh \
   --subject-id sub-001 \
-  --subjects-dir /path/to/subjects_dir \
-  --output-dir /path/to/output \
+  --subjects-dir /path/to/subjects_dir/ \
+  --output-dir /path/to/output/ \
   --fs-dir /path/to/freesurfer/ \
   --sing-dir /path/to/singularity/ \
   [--micro-image /path/to/micro.nii.gz] \
-  [--anat-dir /path/to/bids/sub-001/anat] \
+  [--anat-dir /path/to/bids/sub-001/anat/] \
   [--num-surfaces 14]```
 
 #Required Arguments
