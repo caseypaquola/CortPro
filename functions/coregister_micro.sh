@@ -20,7 +20,7 @@ img_fixed="/out_dir/T1w_synthsegGM.nii.gz"
 img_moving="/out_dir/micro_synthsegGM.nii.gz"
 str_micro2fs_xfm="/out_dir/${SUBJECT_ID}/${SUBJECT_ID}_from-micro_to-fsnative_"
 mat_micro2fs_xfm="${str_micro2fs_xfm}0GenericAffine.mat"
-micro_warped="/out_dir/${SUBJECT_ID}_space-fsnative_desc-micro.nii.gz"
+micro_warped="/out_dir/${SUBJECT_ID}/${SUBJECT_ID}_space-fsnative_desc-micro.nii.gz"
 
 # Registrations from t1-fsnative to qMRI
 antsRegistrationSyN.sh -d 3 -f "$img_fixed" -m "$img_moving" -o "$str_micro2fs_xfm" -t a -p d -i ["${img_fixed}","${img_moving}",0]
