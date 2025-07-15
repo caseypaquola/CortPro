@@ -58,6 +58,18 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 ## 🧬 Example commands
 
 ```
+
+home_dir=/data/group/mune/shortmp/toolbox_test/
+module load freesurfer/7.4
+fs_dir=/opt/freesurfer/7.4/
+sing_dir=/data/project/nspn/singularity/
+subject_id=sub-001
+anat_dir="$home_dir/A1/$subject_id/anat/"
+subjects_dir="$home_dir/A1/fastsurfer/"
+output_dir="$home_dir/A1/MP_output/"
+
+cd /data/group/mune/shortmp/microstructure_profiling/
+
 # Case 1: Full run (no preprocessing yet completed)
 ./microstructure_profiling.sh --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
 
