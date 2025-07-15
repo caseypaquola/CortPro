@@ -89,5 +89,5 @@ cd /data/group/mune/shortmp/microstructure_profiling/
 ## Output
 
 The key outputs of the toolbox are two .csv files
-- MP: represents changes in intensity dowm cortical depths (rows = depths, columns = vertices on fsaverage5)
+- MP: represents changes in intensity down cortical depths (rows = depths, columns = vertices on fsaverage5)
 - MPmoments: shape characterisation of the profiles based on moments (rows = u0-u4, columnes = vertices on fsaverage5)
