@@ -33,8 +33,8 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
   --subject-id sub-001 \
   --subjects-dir /path/to/subjects_dir \
   --output-dir /path/to/output \
-  --fs-dir /path/to/freesurfer \
-  --sing-dir /path/to/singularity \
+  --fs-dir /path/to/freesurfer/ \
+  --sing-dir /path/to/singularity/ \
   [--micro-image /path/to/micro.nii.gz] \
   [--anat-dir /path/to/bids/sub-001/anat] \
   [--num-surfaces 14]```
@@ -44,7 +44,7 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 --subjects-dir	Path to FreeSurfer-style SUBJECTS_DIR
 --output-dir	Output directory for results
 --fs-dir	Path to FreeSurfer (must contain license.txt)
---sing-dir	Path to Singularity images (must contain micapipe-v0.2.3.simg)
+--sing-dir	Path to Singularity images (should be the parent directory, that directory must contain micapipe-v0.2.3.simg)
 
 # Optional Arguments
 --micro-image	Precomputed microstructure image (T1w/T2w)
