@@ -58,7 +58,7 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 ## 🧬 Example commands
 
 ```
-
+# Set arguments
 home_dir=/data/group/mune/shortmp/toolbox_test/
 module load freesurfer/7.4
 fs_dir=/opt/freesurfer/7.4/
