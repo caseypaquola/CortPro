@@ -17,7 +17,7 @@ def compute_kurtosis(x):
     kurt = np.mean(((x - mean) / std)**4) - 3  # excess kurtosis
     return kurt
 
-def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, hemis=['L', 'R']):
+def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, SURF_OUT, hemis=['L', 'R']):
     MP_rows = []
 
     for n in range(1, NUM_SURFACES + 1):
@@ -26,7 +26,7 @@ def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, hemis=['L', 'R']):
             filename = os.path.join(
                 OUTPUT_DIR,
                 SUBJECT_ID,
-                f"{SUBJECT_ID}_hemi-{hemi}_surf-fsaverage5_MP-{n}.mgh"
+                f"{SUBJECT_ID}_hemi-{hemi}_surf-{SURF_OUT}_MP-{n}.mgh"
             )
             print(f"Loading: {filename}")
             img = nib.load(filename)
@@ -82,11 +82,12 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--subject_id", required=True)
     parser.add_argument("--num_surfaces", type=int, required=True)
+    parser.add_argument("--surface_output", type=int, required=True)
     args = parser.parse_args()
 
-    MP = load_MP(args.output_dir, args.subject_id, args.num_surfaces)
+    MP = load_MP(args.output_dir, args.subject_id, args.num_surfaces, args.surface_output)
     MPmoments = calculate_moments(MP)
 
     # Save result
-    np.savetxt(os.path.join(args.output_dir, f"{args.subject_id}_space-fsaverage5_desc-MP.csv"), MP)
-    np.savetxt(os.path.join(args.output_dir, f"{args.subject_id}_space-fsaverage5_desc-MPmoments.csv"), MPmoments)
+    np.savetxt(os.path.join(args.output_dir, f"{args.subject_id}_space-{args.surface_output}_desc-MP.csv"), MP)
+    np.savetxt(os.path.join(args.output_dir, f"{args.subject_id}_space-{args.surface_output}_desc-MPmoments.csv"), MPmoments)

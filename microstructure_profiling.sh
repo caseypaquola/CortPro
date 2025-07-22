@@ -234,7 +234,7 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
     singularity exec -B $OUTPUT_DIR/:/out_dir \
                      -B $TOOLBOX_BIN/:/toolbox_bin \
                         "${MICAPIPE_IMG}" \
-                        python3 /toolbox_bin/collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES"
+                        python3 /toolbox_bin/collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
 
     ##------------------------------------------------------------------------------#
     # Clean up tmp folder and drop datalad files
