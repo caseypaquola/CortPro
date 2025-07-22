@@ -82,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--subject_id", required=True)
     parser.add_argument("--num_surfaces", type=int, required=True)
-    parser.add_argument("--surface_output", type=int, required=True)
+    parser.add_argument("--surface_output", required=True)
     args = parser.parse_args()
 
     MP = load_MP(args.output_dir, args.subject_id, args.num_surfaces, args.surface_output)
