@@ -20,6 +20,7 @@ show_help() {
     echo "  --fs-dir DIR               Path to the FreeSurfer directory [required] (should contain standard license file, 'license.txt')"
     echo "  --sing-dir DIR             Path to the directory with singularities [required] (must contain micapipe-v0.2.3.simg and, if Freesurfer output is not yet available, fastsurfer_gpu.sif)"
     echo "  --num-surfaces N           Number of intracortical surfaces (default: 14)"
+    echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5)"
     echo "  -h, --help                 Display this help message"
 }
 
@@ -34,6 +35,7 @@ OUTPUT_DIR=""
 FREESURFER_HOME=""
 SING_DIR=""
 NUM_SURFACES=14  # default
+SURF_OUT=fsaverage5  # default
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -67,6 +69,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --num-surfaces)
             NUM_SURFACES="$2"
+            shift 2
+            ;;
+        --surface-output)
+            SURF_OUT="$2"
             shift 2
             ;;
         -h|--help)
@@ -190,12 +196,12 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
     # -----------------------------
     # Sample microstructure profiles
     # -----------------------------
-    # create symbolic link to fsaverage5
-    ln -s $FREESURFER_HOME/subjects/fsaverage5 $SUBJECTS_DIR
+    # create symbolic link to fsaverage
+    ln -s $FREESURFER_HOME/subjects/$SURF_OUT $SUBJECTS_DIR
 
     for hemi in lh rh ; do
         [[ $hemi == lh ]] && HEMI=L || HEMI=R
-            # find all intracortical surfaces, list by creation time, sample intensities and convert to fsaverage5
+            # find all intracortical surfaces, list by creation time, sample intensities and convert to fsaverage
             x=$(ls -t ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.0.*)
             for n in $(seq 1 1 ${NUM_SURFACES}) ; do
                 
@@ -217,7 +223,7 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
                 # transform to fsaverage5
                 mri_surf2surf --hemi ${hemi} \
                     --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh \
-                    --trgsubject fsaverage5 --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage5_MP-${n}.mgh
+                    --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_MP-${n}.mgh
             done
         ((Nsteps++))
     done
