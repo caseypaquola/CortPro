@@ -21,6 +21,7 @@ show_help() {
     echo "  --sing-dir DIR             Path to the directory with singularities [required] (must contain micapipe-v0.2.3.simg and, if Freesurfer output is not yet available, fastsurfer_gpu.sif)"
     echo "  --num-surfaces N           Number of intracortical surfaces (default: 14)"
     echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5)"
+    echo "  --ratio-type NAME          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat"
     echo "  -h, --help                 Display this help message"
 }
 
@@ -36,6 +37,7 @@ FREESURFER_HOME=""
 SING_DIR=""
 NUM_SURFACES=14  # default
 SURF_OUT=fsaverage5  # default
+RATIO_TYPE=T2w  # default
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -73,6 +75,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --surface-output)
             SURF_OUT="$2"
+            shift 2
+            ;;
+        --ratio-type)
+            RATIO_TYPE="$2"
             shift 2
             ;;
         -h|--help)
@@ -129,10 +135,10 @@ if [[ -n "$MICRO_IMAGE" ]]; then
     echo "[INFO] Using precomputed microstructure image: $MICRO_IMAGE"
     RESLICE_MICRO=0
 else
-    echo "[INFO] Producing T1wDividedT2w based on data in: $ANAT_DIR"
-    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedByT2w.nii.gz
+    echo "[INFO] Producing T1wDivided${RATIO_TYPE} based on data in: $ANAT_DIR"
+    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedBy${RATIO_TYPE}.nii.gz
     if [[ ! -f $MICRO_IMAGE ]] ; then
-        bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR"
+        bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR" "$RATIO_TYPE"
     fi
 fi
 

@@ -5,11 +5,12 @@
 ANAT_DIR=$1
 SUBJECT_ID=$2
 OUT_DIR=$3
+RATIO_TYPE=$4
 
 micapipe_simg=${SING_DIR}/micapipe-v0.2.3.simg
 ls $TOOLBOX_BIN
 
-for m in T1w T2w ; do
+for m in T1w $RATIO_TYPE ; do
 
     # Create T1 and T2 average across all available runs
     singularity exec -B $ANAT_DIR:/anat_dir \
@@ -29,8 +30,8 @@ singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
             antsRegistrationSyN.sh \
             -d 3 \
             -f /run_dir/T1w_BC.nii.gz \
-            -m /run_dir/T2w_BC.nii.gz \
-            -o /run_dir/T2_space-T1 \
+            -m /run_dir/${RATIO_TYPE}_BC.nii.gz \
+            -o /run_dir/${RATIO_TYPE}_space-T1 \
             -t a 
 
 
@@ -40,5 +41,5 @@ echo "Computing the ratio image"
 singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
             "${micapipe_simg}" \
             fslmaths /run_dir/T1w.nii.gz \
-            -div /run_dir/T2_space-T1Warped.nii.gz \
-            /run_dir/T1wDividedByT2w.nii.gz
+            -div /run_dir/${RATIO_TYPE}_space-T1Warped.nii.gz \
+            /run_dir/T1wDividedBy${RATIO_TYPE}.nii.gz
