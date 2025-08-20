@@ -8,23 +8,22 @@ OUT_DIR=$3
 RATIO_TYPE=$4
 
 micapipe_simg=${SING_DIR}/micapipe-v0.2.3.simg
-ls $TOOLBOX_BIN
 
 for m in T1w $RATIO_TYPE ; do
 
-    # Create T1 and T2 average across all available runs
+    echo "Create T1 and T2 average across all available runs"
     singularity exec -B $ANAT_DIR:/anat_dir \
                 -B $OUT_DIR/$SUBJECT_ID/:/out_dir \
                 -B ${TOOLBOX_BIN}/:/toolbox_bin \
                 "${micapipe_simg}" \
                 /toolbox_bin/anatomical_average.sh "$m"
 
-    # Apply bias correction
+    echo "Apply bias correction"
     mri_nu_correct.mni --i $OUT_DIR/$SUBJECT_ID/${m}.nii.gz --o $OUT_DIR/$SUBJECT_ID/${m}_BC.nii.gz
 done
 
 ##------------------------------------------------------------------------------#
-# Register T2 directly to T1 with affine
+echo "Register T2 directly to T1 with affine"
 singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
             "${micapipe_simg}" \
             antsRegistrationSyN.sh \
