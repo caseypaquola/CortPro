@@ -134,12 +134,15 @@ mkdir -p "$OUTPUT_DIR"/"$SUBJECT_ID" || {
 if [[ -n "$MICRO_IMAGE" ]]; then
     echo "[INFO] Using precomputed microstructure image: $MICRO_IMAGE"
     RESLICE_MICRO=0
+    REGISTER_T1=0
 else
     echo "[INFO] Producing T1wDivided${RATIO_TYPE} based on data in: $ANAT_DIR"
     MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedBy${RATIO_TYPE}.nii.gz
     if [[ ! -f $MICRO_IMAGE ]] ; then
         bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR" "$RATIO_TYPE"
     fi
+    RESLICE_MICRO=1
+    REGISTER_T1=1       # Enables registration of micro-image to surface space using T1 (to avoid background noise issues that may arise in some T1w/T2w)
 fi
 
 
@@ -186,6 +189,15 @@ if [[ ! -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.n
             --regheader \
             --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
             --no-save-reg
+    elif [[ "$REGISTER_T1" == 1 ]]; then
+        echo "[INFO] Performing affine registration of T1 to surface space"
+        cp $OUTPUT_DIR/$SUBJECT_ID/T1w_BC.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz   # temporarily set T1w as micro for registration
+        singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
+                    -B $OUTPUT_DIR/:/out_dir \
+                    -B $TOOLBOX_BIN/:/toolbox_bin \
+                    "${MICAPIPE_IMG}" \
+                    /toolbox_bin/coregister_micro.sh "$SUBJECT_ID" 
+        cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz
     else
         echo "[INFO] Performing affine registration of micro-image to surface space"
         cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz
