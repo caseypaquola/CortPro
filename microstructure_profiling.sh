@@ -114,6 +114,8 @@ MICAPIPE_IMG="$SING_DIR/micapipe-v0.2.3.simg"
 if [[ ! -f $MICAPIPE_IMG ]]; then
     echo "[ERROR] micapipe-v0.2.3.simg not found at: $SING_DIR"
     exit 1
+else
+    singularity exec $MICAPIPE_IMG pip install numpy==1.21.5 nibabel==4.0.2
 fi
 
 # Validate NUM_SURFACES is a positive integer
