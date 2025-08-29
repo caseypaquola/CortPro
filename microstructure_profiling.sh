@@ -217,7 +217,7 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
     # Sample microstructure profiles
     # -----------------------------
     # create symbolic link to fsaverage
-    if [[ "$SURF_OUT" == *"fsaverage"* ]] ; do
+    if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
         ln -s $FREESURFER_HOME/subjects/$SURF_OUT $SUBJECTS_DIR
     fi
 
@@ -242,7 +242,7 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
                     --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
                     --interp trilinear
                 
-                if [[ "$SURF_OUT" == *"fsaverage"* ]] ; do
+                if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
                     # transform to fsaverage
                     mri_surf2surf --hemi ${hemi} \
                         --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
