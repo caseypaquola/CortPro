@@ -37,20 +37,24 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
   --sing-dir /path/to/singularity/ \
   [--micro-image /path/to/micro.nii.gz] \
   [--anat-dir /path/to/bids/sub-001/anat/] \
-  [--num-surfaces 14]```
+  [--num-surfaces 14] \
+  [--surface-output fsaverage] \
+  [--ratio-type T2w]```
 
 #Required Arguments
---subject-id	Subject identifier (e.g., sub-001)
---subjects-dir	Path to FreeSurfer-style SUBJECTS_DIR
---output-dir	Output directory for results
---fs-dir	Path to FreeSurfer (must contain license.txt)
---sing-dir	Path to Singularity images (should be the parent directory, that directory must contain micapipe-v0.2.3.simg)
+--subject-id	        Subject identifier (e.g., sub-001)
+--subjects-dir	      Path to FreeSurfer-style SUBJECTS_DIR
+--output-dir	        Output directory for results
+--fs-dir	            Path to FreeSurfer (must contain license.txt)
+--sing-dir	          Path to Singularity images (should be the parent directory, that directory must contain micapipe-v0.2.3.simg)
 
 # Optional Arguments
---micro-image	Precomputed microstructure image (T1w/T2w)
---anat-dir	BIDS anatomical directory (needed if --micro-image is not provided or surfaces need to be created)
---num-surfaces	Number of intracortical surfaces (default: 14)
--h, --help	Show help message
+--micro-image	        Precomputed microstructure image (T1w/T2w)
+--anat-dir	          BIDS anatomical directory (needed if --micro-image is not provided or surfaces need to be created)
+--num-surfaces	      Number of intracortical surfaces (default: 14)
+--surface-output      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) or native surfaces
+--ratio-type          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat
+-h, --help	          Show help message
 ```
 
 ---
