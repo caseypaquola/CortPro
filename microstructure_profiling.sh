@@ -20,7 +20,7 @@ show_help() {
     echo "  --fs-dir DIR               Path to the FreeSurfer directory [required] (should contain standard license file, 'license.txt')"
     echo "  --sing-dir DIR             Path to the directory with singularities [required] (must contain micapipe-v0.2.3.simg and, if Freesurfer output is not yet available, fastsurfer_gpu.sif)"
     echo "  --num-surfaces N           Number of intracortical surfaces (default: 14)"
-    echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5)"
+    echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) or native surfaces"
     echo "  --ratio-type NAME          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat"
     echo "  -h, --help                 Display this help message"
 }
@@ -217,7 +217,9 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
     # Sample microstructure profiles
     # -----------------------------
     # create symbolic link to fsaverage
-    ln -s $FREESURFER_HOME/subjects/$SURF_OUT $SUBJECTS_DIR
+    if [[ "$SURF_OUT" == *"fsaverage"* ]]
+        ln -s $FREESURFER_HOME/subjects/$SURF_OUT $SUBJECTS_DIR
+    end
 
     for hemi in lh rh ; do
         [[ $hemi == lh ]] && HEMI=L || HEMI=R
@@ -237,13 +239,15 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
                     --regheader ${SUBJECT_ID} \
                     --hemi ${hemi} \
                     --surf $shortname \
-                    --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh \
+                    --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
                     --interp trilinear
                 
-                # transform to fsaverage5
-                mri_surf2surf --hemi ${hemi} \
-                    --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsspace_MP-${n}.mgh \
-                    --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_MP-${n}.mgh
+                if [[ "$SURF_OUT" == *"fsaverage"* ]]
+                    # transform to fsaverage
+                    mri_surf2surf --hemi ${hemi} \
+                        --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
+                        --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_MP-${n}.mgh
+                fi
             done
         ((Nsteps++))
     done
