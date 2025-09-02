@@ -52,7 +52,7 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 --micro-image	        Precomputed microstructure image (T1w/T2w)
 --anat-dir	          BIDS anatomical directory (needed if --micro-image is not provided or surfaces need to be created)
 --num-surfaces	      Number of intracortical surfaces (default: 14)
---surface-output      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) or native surfaces
+--surface-output      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) surface or fsnative
 --ratio-type          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat
 -h, --help	          Show help message
 ```
