@@ -1,12 +1,6 @@
-# Sphinx and theme
 sphinx==6.1.2
-sphinx_rtd_theme==1.2.1
-
-# Extensions for tabs, gallery, and syntax highlighting
+sphinx_rtd_theme==1.2.0
 sphinx-tabs==1.1.11
-sphinx-gallery==0.10.1
-
-# Docutils version compatible with pinned Sphinx
-docutils<0.18,>=0.17
-
-# Optional: add any other needed extensions here
+sphinx-gallery==0.11.1
+docutils<0.18
+enigma-pygments-style @ https://github.com/saratheriver/enigma-pygments/releases/download/v2020.7.8.2/enigma-pygments-style-2020.7.8.2.tar.gz
