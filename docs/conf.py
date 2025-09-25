@@ -12,13 +12,9 @@ extensions = [
     'sphinx_gallery.gen_gallery',
 ]
 
-templates_path = ['_templates']
-exclude_patterns = []
-
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_logo = "_static/cortpro_logo.png"
-
 html_theme_options = {
     "navigation_depth": 3,
     "collapse_navigation": False,
