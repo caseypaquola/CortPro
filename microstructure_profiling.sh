@@ -212,6 +212,17 @@ if [[ ! -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.n
 fi
 
 
+# -----------------------------
+# Compute SNR of microstructure image
+# -----------------------------
+echo "[INFO] Performing affine registration of micro-image to surface space"
+singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
+                    -B $OUTPUT_DIR/:/out_dir \
+                    -B $TOOLBOX_BIN/:/toolbox_bin \
+                    "${MICAPIPE_IMG}" \
+                    /toolbox_bin/compute_snr.sh "$SUBJECT_ID" 9
+
+
 if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
     # -----------------------------
     # Sample microstructure profiles
@@ -234,19 +245,34 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
                 fi
                 shortname=${filename#*.}
                 
-                # sample along intracortical surface
+                # sample microstructure along intracortical surface
                 mri_vol2surf --mov "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
                     --regheader ${SUBJECT_ID} \
                     --hemi ${hemi} \
                     --surf $shortname \
                     --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
                     --interp trilinear
-                
+
                 if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
                     # transform to fsaverage
                     mri_surf2surf --hemi ${hemi} \
                         --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
                         --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_MP-${n}.mgh
+                fi
+
+                # sample SNR along intracortical surface
+                mri_vol2surf --mov "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro_SNR.nii.gz \
+                    --regheader ${SUBJECT_ID} \
+                    --hemi ${hemi} \
+                    --surf $shortname \
+                    --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
+                    --interp trilinear
+
+                if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
+                    # transform to fsaverage
+                    mri_surf2surf --hemi ${hemi} \
+                        --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
+                        --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_SNR-${n}.mgh
                 fi
             done
         ((Nsteps++))
@@ -260,13 +286,19 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
                         "${MICAPIPE_IMG}" \
                         python3 /toolbox_bin/collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
 
+    singularity exec -B $OUTPUT_DIR/:/out_dir \
+                     -B $TOOLBOX_BIN/:/toolbox_bin \
+                        "${MICAPIPE_IMG}" \
+                        python3 /toolbox_bin/collate_SNR.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
+
     ##------------------------------------------------------------------------------#
     # Clean up tmp folder and drop datalad files
-    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
-    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.pial
-    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*synthseg*
-    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*Warped*
-    #rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mat
+    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
+    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.pial
+    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*synthseg*
+    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*Warped*
+    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mat
+    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*tmp*.nii.gz
     echo "[INFO] Toolbox completed for subject $SUBJECT_ID."
 
 fi
