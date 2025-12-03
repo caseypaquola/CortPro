@@ -12,13 +12,14 @@
 #
 import os
 import sys
+import warnings
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'The Big Brain Warp'
-copyright = '2020*, MICA'
-author = 'Casey Paquola, Boris Bernhardt'
+project = 'CortPro'
+copyright = '2025, MuNe'
+author = 'Casey Paquola'
 
 
 # -- General configuration ---------------------------------------------------
@@ -26,9 +27,9 @@ author = 'Casey Paquola, Boris Bernhardt'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_tabs.tabs', 
+extensions = ['sphinx_tabs.tabs',
               'sphinx.ext.autodoc',
-              'sphinx.ext.autosectionlabel', 
+              'sphinx.ext.autosectionlabel',
               'sphinx.ext.autosummary',
               #'sphinx.ext.doctest',
               #'sphinx.ext.intersphinx',
@@ -38,10 +39,8 @@ extensions = ['sphinx_tabs.tabs',
               #'sphinxarg.ext',
               ]
 
-autosummary_generate = True
-autodoc_default_options = {'members': True, 'inherited-members': True}
-numpydoc_show_class_members = False
-autoclass_content = "class"
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
 
 # The master toctree document.
 master_doc = 'index'
@@ -51,7 +50,6 @@ master_doc = 'index'
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-highlight_language ='none'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -59,34 +57,47 @@ highlight_language ='none'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
-html_theme_options = { 'style_nav_header_background': '#5d4bb7'}
+
+html_theme_options = {
+    'style_nav_header_background': '#111111',
+    'logo_only': True,
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': 3,
+    'includehidden': True,
+    'titles_only': False,
+    'style_external_links': True,
+    'display_version': False
+}
+
+html_logo = 'logo.png'
 
 # The name of the Pygments (syntax highlighting) style to use.
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
-pygments_style = 'bigbrainwarplexer.bigbrainwarpLexerStyle'
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+pygments_style = 'micapipelexer.micapipeLexerStyle'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
+#
+# html_context = {
+#     'css_files': [
+#         '_static/css/mica-pipe_colors.css',  # Add path to your custom CSS file
+#     ],
+# }
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
-html_css_files = ['css/bigbrainwarp.css', 
-                  'css/bigbrainwarp_nomaxwidth.css']
+html_css_files = ['css/mica-pipe_colors.css']
 
 # add custom files that are stored in _static
 def setup(app):
-   app.add_css_file('css/bigbrainwarp_tabs.css')
+   app.add_css_file("css/mica-pipe_tabs_tabs.css")
 
-# add logo
-html_logo = "warp2.png"
-html_theme_options = {
-    'logo_only': True,
-    'display_version': False,
-}
+def setup(app):
+    app.add_css_file('css/custom.css')
+
+sphinx_tabs_valid_builders = ['linkcheck']

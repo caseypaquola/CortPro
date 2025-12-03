@@ -1,6 +1,6 @@
-# 🧠 microkit
+# 🧠 CortPro: You cortical profiling toolbox
 
-**microkit** is an open-source toolbox for generating and analysing intracortical microstructure profiles. The only prerequisites for microstructure profiling are (i) an MRI suitable for cortical surface reconstruction (e.g. T1w) and (ii) a microstructure-sensitive volume (e.g. qT1, T1w/T2w, MT).
+**CortPro** is an open-source toolbox for generating and analysing intracortical microstructure profiles. The only prerequisites for microstructure profiling are (i) an MRI suitable for cortical surface reconstruction (e.g. T1w) and (ii) a microstructure-sensitive volume (e.g. qT1, T1w/T2w, MT).
 
 ---
 
