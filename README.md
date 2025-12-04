@@ -2,6 +2,9 @@
 
 **CortPro** is an open-source toolbox for generating and analysing intracortical microstructure profiles. The only prerequisites for microstructure profiling are (i) an MRI suitable for cortical surface reconstruction (e.g. T1w) and (ii) a microstructure-sensitive volume (e.g. qT1, T1w/T2w, MT).
 
+Find out more in our preprint: ([Intracortical microstructure profiling: a versatile method for indexing cortical lamination
+](https://www.biorxiv.org/content/10.1101/2025.10.16.682836v1))
+
 ---
 
 # 🚀 Toolbox features
