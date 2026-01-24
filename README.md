@@ -31,18 +31,20 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 ## 🔧 General usage
 
 ```
-# Run from top directory of this cloned github repo
+# Run from the top-level directory of the cloned repository
 ./microstructure_profiling.sh \
-  --subject-id sub-001 \
-  --subjects-dir /path/to/subjects_dir/ \
-  --output-dir /path/to/output/ \
-  --fs-dir /path/to/freesurfer/ \
-  --sing-dir /path/to/singularity/ \
-  [--micro-image /path/to/micro.nii.gz] \
-  [--anat-dir /path/to/bids/sub-001/anat/] \
-  [--num-surfaces 14] \
-  [--surface-output fsaverage] \
-  [--ratio-type T2w]```
+--subject-id sub-001 \
+--subjects-dir /path/to/subjects_dir/ \
+--output-dir /path/to/output/ \
+--fs-dir /path/to/freesurfer/ \
+--sing-dir /path/to/singularity/ \
+[--micro-image /path/to/micro.nii.gz] \
+[--anat-dir /path/to/bids/sub-001/anat/] \
+[--t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz] \
+[--ratio-type T2w] \
+[--skip-bias-correct] \
+[--num-surfaces 14] \
+[--surface-output fsaverage5]
 
 #Required Arguments
 --subject-id	        Subject identifier (e.g., sub-001)
@@ -52,12 +54,15 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 --sing-dir	          Path to Singularity images (should be the parent directory, that directory must contain micapipe-v0.2.3.simg)
 
 # Optional Arguments
---micro-image	        Precomputed microstructure image (T1w/T2w)
---anat-dir	          BIDS anatomical directory (needed if --micro-image is not provided or surfaces need to be created)
---num-surfaces	      Number of intracortical surfaces (default: 14)
---surface-output      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) surface or fsnative
---ratio-type          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat
--h, --help	          Show help message
+--micro-image FILE    Precomputed microstructure image in native T1 space (e.g. T1w/T2w, qT1). If provided, this option takes precedence over all other microstructure inputs.
+--anat-dir DIR        BIDS anat/ directory. Required if no precomputed microstructure image is provided and no custom T1/T2 files are supplied. Also required if cortical surfaces need to be generated.
+--t1-file FILE        Custom T1-weighted image. Must be used together with --t2-file.
+--t2-file FILE        Custom T2-weighted (or other contrast) image for ratio computation. Must be used together with --t1-file.
+--ratio-type NAME     BIDS suffix of the image used for ratio computation with T1w when deriving data from anat-dir (default: T2w).
+--skip-bias-correct   Disable bias-field correction during T1w/T2w ratio computation.
+--num-surfaces N      Number of intracortical surfaces to generate (default: 14).
+--surface-output NAME  Output surface space. Any FreeSurfer fsaverage* surface (default: fsaverage5) or fsnative.
+-h, --help            Display help message.
 ```
 
 ---
@@ -83,8 +88,11 @@ cd /data/group/mune/shortmp/microstructure_profiling/
 # Case 2: Precomputed micro-image, but no FreeSurfer output available
 ./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
 
-# Case 3: FreeSurfer output available, as well as a T1 and T2 (not yet a T1w/T2w)
+# Case 3A: FreeSurfer output available, as well as raw T1 and T2 (housed in BIDS anat directory)
 ./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+# Case 3B: FreeSurfer output available, custom T1 and T2 provided
+./microstructure_profiling.sh --t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
 
 # Case 4: Freesurfer output and micro-image both already available
 ./microstructure_profiling.sh --micro-image $micro_image --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
