@@ -22,6 +22,9 @@ show_help() {
     echo "  --num-surfaces N           Number of intracortical surfaces (default: 14)"
     echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) or native surfaces"
     echo "  --ratio-type NAME          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat"
+    echo "  --t1-file PATH             Custom T1w (must be paired with --t2-file)"
+    echo "  --t2-file PATH             Custom T2w (must be paired with --t1-file)"
+    echo "  --skip-bias-correct        Option to turn off bias correction on T1w and T2w images"
     echo "  -h, --help                 Display this help message"
 }
 
@@ -38,6 +41,9 @@ SING_DIR=""
 NUM_SURFACES=14  # default
 SURF_OUT=fsaverage5  # default
 RATIO_TYPE=T2w  # default
+T1_FILE=""
+T2_FILE=""
+SKIP_BC=0
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -80,6 +86,18 @@ while [[ $# -gt 0 ]]; do
         --ratio-type)
             RATIO_TYPE="$2"
             shift 2
+            ;;
+        --t1-file)
+            T1_FILE="$2"
+            shift 2
+            ;;
+        --t2-file)
+            T2_FILE="$2"
+            shift 2
+            ;;
+        --skip-bias-correct)
+            SKIP_BC=1
+            shift
             ;;
         -h|--help)
             show_help
@@ -137,14 +155,26 @@ if [[ -n "$MICRO_IMAGE" ]]; then
     echo "[INFO] Using precomputed microstructure image: $MICRO_IMAGE"
     RESLICE_MICRO=0
     REGISTER_T1=0
-else
-    echo "[INFO] Producing T1wDivided${RATIO_TYPE} based on data in: $ANAT_DIR"
-    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedBy${RATIO_TYPE}.nii.gz
-    if [[ ! -f $MICRO_IMAGE ]] ; then
-        bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR" "$RATIO_TYPE"
+elif [[ -n "$T1_FILE" || -n "$T2_FILE" ]]; then
+    # predefined T1/T2 case
+    if [[ -z "$T1_FILE" || -z "$T2_FILE" ]]; then
+        echo "[ERROR] --t1-file and --t2-file must be provided together."
+        exit 1
     fi
-    RESLICE_MICRO=1
-    REGISTER_T1=1       # Enables registration of micro-image to surface space using T1 (to avoid background noise issues that may arise in some T1w/T2w)
+    if [[ ! -f "$T1_FILE" || ! -f "$T2_FILE" ]]; then
+        echo "[ERROR] Provided T1 or T2 file does not exist."
+        exit 1
+    fi
+    bash "$TOOLBOX_BIN/compute_t1t2_ratio_predefined.sh" \
+         "$T1_FILE" "$T2_FILE" "$SUBJECT_ID" "$OUTPUT_DIR" "$SKIP_BC"
+else
+    # BIDS-derived case
+    if [[ -z "$ANAT_DIR" ]]; then
+        echo "[ERROR] No --anat-dir provided to compute T1/T2 ratio."
+        exit 1
+    fi
+    bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" \
+         "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR" "$RATIO_TYPE" "$SKIP_BC"
 fi
 
 
@@ -223,7 +253,7 @@ singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     /toolbox_bin/compute_snr.sh "$SUBJECT_ID" 9
 
 
-if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
+if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fs_desc-micro.nii.gz ]] ; then
     # -----------------------------
     # Sample microstructure profiles
     # -----------------------------

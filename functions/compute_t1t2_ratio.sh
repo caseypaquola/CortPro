@@ -6,6 +6,7 @@ ANAT_DIR=$1
 SUBJECT_ID=$2
 OUT_DIR=$3
 RATIO_TYPE=$4
+SKIP_BC=$5
 
 micapipe_simg=${SING_DIR}/micapipe-v0.2.3.simg
 
@@ -19,12 +20,15 @@ for m in T1w $RATIO_TYPE ; do
                 /toolbox_bin/anatomical_average.sh "$m"
 
     echo "Apply bias correction"
-    mri_nu_correct.mni --i $OUT_DIR/$SUBJECT_ID/${m}.nii.gz --o $OUT_DIR/$SUBJECT_ID/${m}_BC.nii.gz
+    if [[ "$SKIP_BC" -eq 0 ]]; then
+        mri_nu_correct.mni --i $OUT_DIR/$SUBJECT_ID/${m}.nii.gz --o $OUT_DIR/$SUBJECT_ID/${m}_BC.nii.gz
+    fi
 done
 
 ##------------------------------------------------------------------------------#
 echo "Register T2 directly to T1 with affine"
-singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
+if [[ "$SKIP_BC" -eq 0 ]]; then
+    singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
             "${micapipe_simg}" \
             antsRegistrationSyN.sh \
             -d 3 \
@@ -32,6 +36,16 @@ singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
             -m /run_dir/${RATIO_TYPE}_BC.nii.gz \
             -o /run_dir/${RATIO_TYPE}_space-T1 \
             -t a 
+else
+    singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
+            "${micapipe_simg}" \
+            antsRegistrationSyN.sh \
+            -d 3 \
+            -f /run_dir/T1w.nii.gz \
+            -m /run_dir/${RATIO_TYPE}.nii.gz \
+            -o /run_dir/${RATIO_TYPE}_space-T1 \
+            -t a
+end
 
 
 ##------------------------------------------------------------------------------#
