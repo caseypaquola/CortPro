@@ -92,7 +92,7 @@ cd /data/group/mune/shortmp/microstructure_profiling/
 ./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
 
 # Case 3B: FreeSurfer output available, custom T1 and T2 provided
-./microstructure_profiling.sh --t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+./microstructure_profiling.sh --t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir --skip-bias-correct
 
 # Case 4: Freesurfer output and micro-image both already available
 ./microstructure_profiling.sh --micro-image $micro_image --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
