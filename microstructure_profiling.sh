@@ -335,7 +335,7 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
 
     ##------------------------------------------------------------------------------#
     # Clean up tmp folder and drop datalad files
-    if [[ "$CLEAN_UP" == 1 ]]; then;
+    if [[ "$CLEAN_UP" == 1 ]]; then
         rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
         rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.pial
         rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*synthseg*
