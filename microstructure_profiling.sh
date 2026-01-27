@@ -253,7 +253,7 @@ singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     /toolbox_bin/compute_snr.sh "$SUBJECT_ID" 9
 
 
-if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fs_desc-micro.nii.gz ]] ; then
+if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
     # -----------------------------
     # Sample microstructure profiles
     # -----------------------------

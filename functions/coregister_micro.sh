@@ -4,7 +4,7 @@ SUBJECT_ID=$1
 
 FSLDIR=/opt/fsl-6.0.2/
 T1_in_fs=/subjects_dir/${SUBJECT_ID}/mri/rawavg.mgz
-MICRO_IMAGE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz
+MICRO_IMAGE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz
 
 synthseg_native() {
   mri_img=$1
@@ -27,7 +27,7 @@ antsRegistrationSyN.sh -d 3 -f "$img_fixed" -m "$img_moving" -o "$str_micro2fs_x
 
 # Check if transformations file exist
 if [ ! -f "${mat_micro2fs_xfm}" ]; then 
-  echo "[ERROR] Registration between micro and T1nativepro failed"
+  echo "[ERROR] Registration between micro and T1fsnative failed"
   exit
 fi
 
