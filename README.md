@@ -43,6 +43,7 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 [--t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz] \
 [--ratio-type T2w] \
 [--skip-bias-correct] \
+[--keep-inter-files] \
 [--num-surfaces 14] \
 [--surface-output fsaverage5]
 
@@ -60,6 +61,7 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 --t2-file FILE        Custom T2-weighted (or other contrast) image for ratio computation. Must be used together with --t1-file.
 --ratio-type NAME     BIDS suffix of the image used for ratio computation with T1w when deriving data from anat-dir (default: T2w).
 --skip-bias-correct   Disable bias-field correction during T1w/T2w ratio computation.
+--keep-inter-files    Skips final clean up step. Not good for storage but helpful for inspecting data transformations.
 --num-surfaces N      Number of intracortical surfaces to generate (default: 14).
 --surface-output NAME  Output surface space. Any FreeSurfer fsaverage* surface (default: fsaverage5) or fsnative.
 -h, --help            Display help message.
