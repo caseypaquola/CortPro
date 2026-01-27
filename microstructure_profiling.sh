@@ -25,6 +25,7 @@ show_help() {
     echo "  --t1-file PATH             Custom T1w (must be paired with --t2-file)"
     echo "  --t2-file PATH             Custom T2w (must be paired with --t1-file)"
     echo "  --skip-bias-correct        Option to turn off bias correction on T1w and T2w images"
+    echo "  --keep-inter-files         Option to keep all intermediary files, which are otherwise removed in a final clean up"
     echo "  -h, --help                 Display this help message"
 }
 
@@ -44,6 +45,7 @@ RATIO_TYPE=T2w  # default
 T1_FILE=""
 T2_FILE=""
 SKIP_BC=0
+CLEAN_UP=1
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -97,6 +99,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --skip-bias-correct)
             SKIP_BC=1
+            shift
+            ;;
+        --keep-inter-files)
+            CLEAN_UP=0
             shift
             ;;
         -h|--help)
@@ -167,6 +173,7 @@ elif [[ -n "$T1_FILE" || -n "$T2_FILE" ]]; then
     fi
     bash "$TOOLBOX_BIN/compute_t1t2_ratio_predefined.sh" \
          "$T1_FILE" "$T2_FILE" "$SUBJECT_ID" "$OUTPUT_DIR" "$SKIP_BC"
+    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedByT2w.nii.gz
 else
     # BIDS-derived case
     if [[ -z "$ANAT_DIR" ]]; then
@@ -175,6 +182,7 @@ else
     fi
     bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" \
          "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR" "$RATIO_TYPE" "$SKIP_BC"
+    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedBy${RATIO_TYPE}.nii.gz
 fi
 
 
@@ -223,7 +231,11 @@ if [[ ! -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.n
             --no-save-reg
     elif [[ "$REGISTER_T1" == 1 ]]; then
         echo "[INFO] Performing affine registration of T1 to surface space"
-        cp $OUTPUT_DIR/$SUBJECT_ID/T1w_BC.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz   # temporarily set T1w as micro for registration
+        if [[ "$SKIP_BC" == 1 ]]; then
+            cp $OUTPUT_DIR/$SUBJECT_ID/T1w.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz   # temporarily set T1w as micro for registration
+        else
+            cp $OUTPUT_DIR/$SUBJECT_ID/T1w_BC.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz   # temporarily set T1w as micro for registration
+        fi
         singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     -B $OUTPUT_DIR/:/out_dir \
                     -B $TOOLBOX_BIN/:/toolbox_bin \
@@ -323,12 +335,14 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
 
     ##------------------------------------------------------------------------------#
     # Clean up tmp folder and drop datalad files
-    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
-    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.pial
-    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*synthseg*
-    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*Warped*
-    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mat
-    rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*tmp*.nii.gz
+    if [[ "$CLEAN_UP" == 1 ]]; then;
+        rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mgh
+        rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.pial
+        rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*synthseg*
+        rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*Warped*
+        rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*.mat
+        rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*tmp*.nii.gz
+    fi
     echo "[INFO] Toolbox completed for subject $SUBJECT_ID."
 
 fi
