@@ -32,7 +32,7 @@ SUBJECT_ID=$1
 SIGMA=$2
 
 FSLDIR=/opt/fsl-6.0.2/
-MICRO_IMAGE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro.nii.gz
+MICRO_IMAGE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz
 PREFIX=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_tmp_
 
 echo "Voxel-wise SNR computation using McCann smoothed image subtraction method"
@@ -48,7 +48,7 @@ MEAN_NOISE_SQ_MUL="${PREFIX}_mean_noise_mul.nii.gz"
 LOCAL_VAR="${PREFIX}_local_var.nii.gz"
 LOCAL_STD="${PREFIX}_local_std.nii.gz"
 LOCAL_STD_EPS="${PREFIX}_local_std_eps.nii.gz"
-SNR_MAP="/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-nativepro_desc-micro_SNR.nii.gz"
+SNR_MAP="/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro_SNR.nii.gz"
 
 # 1) Smooth T1
 echo "[1] Smoothing T1w image..."
