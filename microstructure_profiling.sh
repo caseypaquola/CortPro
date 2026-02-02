@@ -46,6 +46,8 @@ T1_FILE=""
 T2_FILE=""
 SKIP_BC=0
 CLEAN_UP=1
+RESLICE_MICRO=0
+REGISTER_T1=0
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -155,12 +157,13 @@ mkdir -p "$OUTPUT_DIR"/"$SUBJECT_ID" || {
 }
 
 # -----------------------------
-# Compile microstructure image
+# Compile microstructure image -  creates new file with standardised naming for micro image in its native space (Nb: T1-space for T1w/T2w)
 # -----------------------------
+
 if [[ -n "$MICRO_IMAGE" ]]; then
+    # pre-made micro image case
     echo "[INFO] Using precomputed microstructure image: $MICRO_IMAGE"
-    RESLICE_MICRO=0
-    REGISTER_T1=0
+    cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
 elif [[ -n "$T1_FILE" || -n "$T2_FILE" ]]; then
     # predefined T1/T2 case
     if [[ -z "$T1_FILE" || -z "$T2_FILE" ]]; then
@@ -173,7 +176,8 @@ elif [[ -n "$T1_FILE" || -n "$T2_FILE" ]]; then
     fi
     bash "$TOOLBOX_BIN/compute_t1t2_ratio_predefined.sh" \
          "$T1_FILE" "$T2_FILE" "$SUBJECT_ID" "$OUTPUT_DIR" "$SKIP_BC"
-    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedByT2w.nii.gz
+    cp "$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedByT2w.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
+    REGISTER_T1=1
 else
     # BIDS-derived case
     if [[ -z "$ANAT_DIR" ]]; then
@@ -182,7 +186,8 @@ else
     fi
     bash "$TOOLBOX_BIN/compute_t1t2_ratio.sh" \
          "$ANAT_DIR" "$SUBJECT_ID" "$OUTPUT_DIR" "$RATIO_TYPE" "$SKIP_BC"
-    MICRO_IMAGE="$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedBy${RATIO_TYPE}.nii.gz
+    cp "$OUTPUT_DIR"/"$SUBJECT_ID"/T1wDividedBy${RATIO_TYPE}.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
+    REGISTER_T1=1
 fi
 
 
@@ -196,9 +201,11 @@ if [[ ! -f "$SUBJECTS_DIR"/"$SUBJECT_ID"/surf/lh.pial ]]; then
         exit 1
     fi
     bash "$TOOLBOX_BIN/run_fastsurfer.sh" "$ANAT_DIR" "$SUBJECT_ID" "$SUBJECTS_DIR" "$OUTPUT_DIR"
-    RESLICE_MICRO=1    # Defines whether reslicing of affine registration will be used for co-registration of micro-image. Dependent on surface generation from T1 in micro-image.
+    if 
+    if [[ ! -n "$MICRO_IMAGE" ]]; then
+        RESLICE_MICRO=1    # Defines whether reslicing of affine registration will be used for co-registration of micro-image. Dependent on surface generation from T1 in micro-image.
+    fi
 else
-    RESLICE_MICRO=0
     echo "[INFO] Found Freesurfer directory: "$SUBJECTS_DIR"/"$SUBJECT_ID""
 fi
 
@@ -221,43 +228,39 @@ rm -rfv ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.0.0.pial ${OUTPUT_DIR}/${SUBJECT_ID}
 # -----------------------------
 # Co-register microstructure image
 # -----------------------------
-if [[ ! -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
-    if [[ "$RESLICE_MICRO" == 1 ]]; then
+if [[ "$RESLICE_MICRO" == 1 ]]; then
         echo "[INFO] Reslicing micro-image to surface space"
-        mri_vol2vol --mov ${MICRO_IMAGE} \
+        mri_vol2vol --mov $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz \
             --targ ${SUBJECTS_DIR}/${SUBJECT_ID}/mri/rawavg.mgz \
             --regheader \
             --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz \
             --no-save-reg
-    elif [[ "$REGISTER_T1" == 1 ]]; then
+else 
+    if [[ "$REGISTER_T1" == 1 ]]; then
         echo "[INFO] Performing affine registration of T1 to surface space"
+        # define image to use as template for transformation (micro volume to surface space)
         if [[ "$SKIP_BC" == 1 ]]; then
-            cp $OUTPUT_DIR/$SUBJECT_ID/T1w.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz   # temporarily set T1w as micro for registration
+            cp $OUTPUT_DIR/$SUBJECT_ID/T1w.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-template.nii.gz   
         else
-            cp $OUTPUT_DIR/$SUBJECT_ID/T1w_BC.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz   # temporarily set T1w as micro for registration
+            cp $OUTPUT_DIR/$SUBJECT_ID/T1w_BC.nii.gz $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-template.nii.gz
         fi
-        singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
-                    -B $OUTPUT_DIR/:/out_dir \
-                    -B $TOOLBOX_BIN/:/toolbox_bin \
-                    "${MICAPIPE_IMG}" \
-                    /toolbox_bin/coregister_micro.sh "$SUBJECT_ID" 
-        cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz
     else
         echo "[INFO] Performing affine registration of micro-image to surface space"
-        cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz
-        singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
-                    -B $OUTPUT_DIR/:/out_dir \
-                    -B $TOOLBOX_BIN/:/toolbox_bin \
-                    "${MICAPIPE_IMG}" \
-                    /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
+        cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-template.nii.gz
+        cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
     fi
+    singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
+                -B $OUTPUT_DIR/:/out_dir \
+                -B $TOOLBOX_BIN/:/toolbox_bin \
+                "${MICAPIPE_IMG}" \
+                /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
 fi
 
 
 # -----------------------------
 # Compute SNR of microstructure image
 # -----------------------------
-echo "[INFO] Performing affine registration of micro-image to surface space"
+echo "[INFO] Computing SNR along profiles"
 singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     -B $OUTPUT_DIR/:/out_dir \
                     -B $TOOLBOX_BIN/:/toolbox_bin \
@@ -265,7 +268,6 @@ singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     /toolbox_bin/compute_snr.sh "$SUBJECT_ID" 9
 
 
-if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
     # -----------------------------
     # Sample microstructure profiles
     # -----------------------------
@@ -344,5 +346,3 @@ if [[ -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii
         rm -rf "$OUTPUT_DIR"/"$SUBJECT_ID"/*tmp*.nii.gz
     fi
     echo "[INFO] Toolbox completed for subject $SUBJECT_ID."
-
-fi
