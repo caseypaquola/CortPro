@@ -223,7 +223,8 @@ for hemi in lh rh ; do
             /tmp/ \
             --software freesurfer --subject_id $SUBJECT_ID
 done
-rm -rfv ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.0.0.pial ${OUTPUT_DIR}/${SUBJECT_ID}/${hemi}.1.0.pial # removing pial and wm surfaces
+rm -rfv ${OUTPUT_DIR}/${SUBJECT_ID}/*.0.0.pial ${OUTPUT_DIR}/${SUBJECT_ID}/*.1.0.pial # removing pial and wm surfaces
+
 
 # -----------------------------
 # Co-register microstructure image
