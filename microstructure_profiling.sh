@@ -201,7 +201,6 @@ if [[ ! -f "$SUBJECTS_DIR"/"$SUBJECT_ID"/surf/lh.pial ]]; then
         exit 1
     fi
     bash "$TOOLBOX_BIN/run_fastsurfer.sh" "$ANAT_DIR" "$SUBJECT_ID" "$SUBJECTS_DIR" "$OUTPUT_DIR"
-    if 
     if [[ ! -n "$MICRO_IMAGE" ]]; then
         RESLICE_MICRO=1    # Defines whether reslicing of affine registration will be used for co-registration of micro-image. Dependent on surface generation from T1 in micro-image.
     fi
