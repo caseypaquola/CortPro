@@ -33,4 +33,4 @@ if [ ! -f "${mat_micro2fs_xfm}" ]; then
 fi
 
 # Apply transformations: from micro to T1-fsnative
-antsApplyTransforms -d 3 -i "$MICRO_IMAGE" -r "$T1_in_fs" -t ${mat_micro2fs_xfm} -o "$MICRO_WARPED" -v -u int
+antsApplyTransforms -d 3 -i "$MICRO_IMAGE" -r "$T1_in_fs" -t ${mat_micro2fs_xfm} -o "$MICRO_WARPED" -v
