@@ -45,7 +45,7 @@ else
             -m /run_dir/${RATIO_TYPE}.nii.gz \
             -o /run_dir/${RATIO_TYPE}_space-T1 \
             -t a
-end
+fi
 
 
 ##------------------------------------------------------------------------------#
