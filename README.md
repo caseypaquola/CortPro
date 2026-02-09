@@ -68,7 +68,7 @@ fs_dir=$FREESURFER_HOME
 sing_dir=/home/user/singularities/ # where the necessary containers are located
 subject_id=sub-001                 
 anat_dir="/BIDS/raw_data/$subject_id/anat/"
-subjects_dir="/BIDS/derivatives/fastsurfer/"       # SUBJECT_DIR of FreeSurfer output or new location for saving of FastSurfer data
+subjects_dir="/BIDS/derivatives/fastsurfer/"       # SUBJECTS_DIR of FreeSurfer output or new location for saving of FastSurfer data
 output_dir="/BIDS/derivatives/MP_output/"          # where the output should be saved
 
 cd CortPro
