@@ -9,7 +9,18 @@ Find out more in our preprint ➡️  [Intracortical microstructure profiling: a
 
 ---
 
-## 🔧 General usage
+## Contents
+- [Quick start](#quick-start-single-command-run)
+- [Command-line options](#command-line-options)
+- [Example commands](#example-commands)
+- [Outputs](#outputs)
+- [Installation](#installation)
+
+---
+
+## 🚀 Quick start (single-command run)
+
+CortPro is designed to run in **one line of code**, and flexibly performs different preprocessing steps depending on the provided input:
 
 ```
 # Run from the top-level directory of the cloned repository
@@ -89,3 +100,21 @@ cd /data/group/mune/shortmp/microstructure_profiling/
 The key outputs of the toolbox are two .csv files
 - MP: represents changes in intensity down cortical depths (rows = depths, columns = vertices)
 - MPmoments: shape characterisation of the profiles based on moments (rows = u0-u4, columns = vertices)
+
+---
+
+## ⚙️ Installation
+
+1. **Clone the repository**:
+2. 
+```bash
+git clone https://github.com/yourorg/CortPro.git
+cd CortPro
+```
+
+2. **Check dependencies**:
+3. 
+- **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/))
+- FreeSurfer with valid `license.txt` ([Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall))
+- Necessary container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
+- Optional container: [`fastsurfer_gpu.sif`](https://deep-mi.org/FastSurfer/dev/overview/singularity.html) (if FreeSurfer output is missing)
