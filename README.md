@@ -11,7 +11,6 @@ Find out more in our preprint ➡️  [Intracortical microstructure profiling: a
 
 ## Contents
 - [Quick start](#quick-start-single-command-run)
-- [Command-line options](#command-line-options)
 - [Example commands](#example-commands)
 - [Outputs](#outputs)
 - [Installation](#installation)
