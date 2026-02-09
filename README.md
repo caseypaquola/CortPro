@@ -5,26 +5,7 @@
 Find out more in our preprint ➡️  [Intracortical microstructure profiling: a versatile method for indexing cortical lamination
 ](https://www.biorxiv.org/content/10.1101/2025.10.16.682836v1)
 
----
-
-# 🚀 Toolbox features
-- Generation and characterisation of intracortical microstructure profiles
-- Co-registration of microstructural images to cortical surfaces
-- Flexible adaptation of sampling precision
-- Versatile application to different modalities (even 3D histology)
-- (Optional) Computation of bias-corrected T1w/T2w images
-- (Optional) Cortical surface reconstruction
-
----
-
-## 📦 Dependencies
-
-To simplify the installation of dependencies, the toolbox uses the micapipe container, which contains software, such as ANTS, FSL and several python packages. 
-
-- **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/))
-- FreeSurfer with valid `license.txt` ([Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall))
-- Necessary container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
-- Optional container: [`fastsurfer_gpu.sif`](https://deep-mi.org/FastSurfer/dev/overview/singularity.html) (if FreeSurfer output is missing)
+![CortPro pipeline](docs/cortpro_pipeline.png)
 
 ---
 
