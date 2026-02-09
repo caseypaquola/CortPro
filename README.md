@@ -64,14 +64,12 @@ CortPro is designed to run in **one line of code**, and flexibly performs differ
 
 ```
 # Set arguments
-home_dir=/data/group/mune/shortmp/toolbox_test/
-module load freesurfer/7.4
-fs_dir=/opt/freesurfer/7.4/
-sing_dir=/data/project/nspn/singularity/
-subject_id=sub-001
-anat_dir="$home_dir/A1/$subject_id/anat/"
-subjects_dir="$home_dir/A1/fastsurfer/"
-output_dir="$home_dir/A1/MP_output/"
+fs_dir=$FREESURFER_HOME
+sing_dir=/home/user/singularities/ # where the necessary containers are located
+subject_id=sub-001                 
+anat_dir="/BIDS/raw_data/$subject_id/anat/"
+subjects_dir="/BIDS/derivatives/fastsurfer/"       # SUBJECT_DIR of FreeSurfer output or new location for saving of FastSurfer data
+output_dir="/BIDS/derivatives/MP_output/"          # where the output should be saved
 
 cd CortPro
 
