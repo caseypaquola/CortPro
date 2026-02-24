@@ -11,15 +11,15 @@ MICRO_WARPED="/out_dir/${SUBJECT_ID}/${SUBJECT_ID}_space-fsnative_desc-micro.nii
 synthseg_native() {
   mri_img=$1
   mri_str=$2
-  mri_synth="/out_dir/${mri_str}_synthsegGM.nii.gz"
+  mri_synth="/out_dir/$SUBJECT_ID/${mri_str}_synthsegGM.nii.gz"
   mri_synthseg --i "${mri_img}" --o "/tmp/${mri_str}_synthseg.nii.gz" --robust --cpu
   $FSLDIR/bin/fslmaths "/tmp/${mri_str}_synthseg.nii.gz" -uthr 42 -thr 42 -bin -mul -39 -add "/tmp/${mri_str}_synthseg.nii.gz" "${mri_synth}"
 }
 
 synthseg_native "${T1_in_fs}" "T1w"
 synthseg_native "${MICRO_TEMPLATE}" "micro"
-img_fixed="/out_dir/T1w_synthsegGM.nii.gz"
-img_moving="/out_dir/micro_synthsegGM.nii.gz"
+img_fixed="/out_dir/$SUBJECT_ID/T1w_synthsegGM.nii.gz"
+img_moving="/out_dir/$SUBJECT_ID/micro_synthsegGM.nii.gz"
 str_micro2fs_xfm="/out_dir/${SUBJECT_ID}/${SUBJECT_ID}_from-micro_to-fsnative_"
 mat_micro2fs_xfm="${str_micro2fs_xfm}0GenericAffine.mat"
 
