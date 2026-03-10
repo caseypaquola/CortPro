@@ -23,8 +23,17 @@ if [[ "$SKIP_BC" -eq 0 ]]; then
             -d 3 \
             -f /run_dir/T1w_BC.nii.gz \
             -m /run_dir/T2w_BC.nii.gz \
-            -o /run_dir/T2w_space-T1 \
+            -o /run_dir/T2w_BC_space-T1 \
             -t a 
+
+    # Compute T1w/T2w image
+    echo "Computing the ratio image"
+    singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
+            "${micapipe_simg}" \
+            fslmaths /run_dir/T1w_BC.nii.gz \
+            -div /run_dir/T2w_BC_space-T1Warped.nii.gz \
+            /run_dir/T1wDividedByT2w.nii.gz
+
 else
 
     echo "Register T2 directly to T1 with affine"
@@ -37,15 +46,14 @@ else
             -f /run_dir/T1w.nii.gz \
             -m /run_dir/T2w.nii.gz \
             -o /run_dir/T2w_space-T1 \
-            -t a 
-fi
+            -t a
 
-
-##------------------------------------------------------------------------------#
-# Compute T1w/T2w image
-echo "Computing the ratio image"
-singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
+    # Compute T1w/T2w image
+    echo "Computing the ratio image"
+    singularity exec -B $OUT_DIR/$SUBJECT_ID/:/run_dir \
             "${micapipe_simg}" \
             fslmaths /run_dir/T1w.nii.gz \
             -div /run_dir/T2w_space-T1Warped.nii.gz \
             /run_dir/T1wDividedByT2w.nii.gz
+
+fi
