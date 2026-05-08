@@ -55,4 +55,7 @@ The numerical range of your moment values is highly dependent on your input data
    :align: center
    :alt: Statistical distribution of moments
 
+.. note::
+   **Exluding the medial wall:** Make sure you exclude the medial wall when inspecting the distributions, otherwise you'll see an abnormal spike in the histograms.
+
 For a comprehensive breakdown of the sampling process and the mathematical framework behind these moments, please refer to our full paper in `Imaging Neuroscience <https://doi.org/10.1162/IMAG.a.1212>`_.
