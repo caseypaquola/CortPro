@@ -316,7 +316,7 @@ fi
                     # transform to fsaverage
                     mri_surf2surf --hemi ${hemi} \
                         --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
-                        --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh
+                        --trgsubject fsaverage --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh
                     # transform to fsLR32k using neuromaps
                     python3 transform_fsaverage_to_fslr "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
                 fi
@@ -340,7 +340,7 @@ fi
                         # transform to fsaverage
                         mri_surf2surf --hemi ${hemi} \
                             --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
-                            --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh
+                            --trgsubject fsaverage --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh
                         # transform to fsLR32k using neuromaps
                         python3 transform_fsaverage_to_fslr "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_SNR-${n}.mgh
                     fi
