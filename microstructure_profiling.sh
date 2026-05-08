@@ -255,11 +255,13 @@ else
         cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-template.nii.gz
         cp ${MICRO_IMAGE} $OUTPUT_DIR/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
     fi
-    singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
-                -B $OUTPUT_DIR/:/out_dir \
-                -B $TOOLBOX_BIN/:/toolbox_bin \
-                "${MICAPIPE_IMG}" \
-                /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
+    if [[ ! -f "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro.nii.gz ]] ; then
+        singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
+                    -B $OUTPUT_DIR/:/out_dir \
+                    -B $TOOLBOX_BIN/:/toolbox_bin \
+                    "${MICAPIPE_IMG}" \
+                    /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
+    fi
 fi
 
 
@@ -283,7 +285,7 @@ fi
     if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
         ln -s $FREESURFER_HOME/subjects/$SURF_OUT $SUBJECTS_DIR
     fi
-    if [[ "$SURF_OUT" == "fsLR32K" ]] ; then
+    if [[ "$SURF_OUT" == "fsLR32k" ]] ; then
         ln -s $FREESURFER_HOME/subjects/fsaverage $SUBJECTS_DIR
     fi
 
