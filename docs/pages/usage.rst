@@ -15,17 +15,21 @@ General command
 
 .. code-block:: bash
 
-   ./microstructure_profiling.sh \
-      --subject-id sub-001 \
-      --subjects-dir /path/to/subjects_dir/ \
-      --output-dir /path/to/output/ \
-      --fs-dir /path/to/freesurfer/ \
-      --sing-dir /path/to/singularity/ \
-      [--micro-image /path/to/micro.nii.gz] \
-      [--anat-dir /path/to/bids/sub-001/anat/] \
-      [--num-surfaces 14] \
-      [--surface-output fsaverage] \
-      [--ratio-type T2w]
+# Run from the top-level directory of the cloned repository
+./microstructure_profiling.sh \
+   --subject-id sub-001 \
+   --subjects-dir /path/to/subjects_dir/ \
+   --output-dir /path/to/output/ \
+   --fs-dir /path/to/freesurfer/ \
+   --sing-dir /path/to/singularity/ \
+   [--micro-image /path/to/micro.nii.gz] \
+   [--anat-dir /path/to/bids/sub-001/anat/] \
+   [--t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz] \
+   [--ratio-type T2w] \
+   [--skip-bias-correct] \
+   [--keep-inter-files] \
+   [--num-surfaces 14] \
+   [--surface-output fsaverage5]
 
 -------------------------------------------------------------------------------
 
@@ -67,6 +71,12 @@ Optional arguments
 +--------------------+------------------------------------------------------------+
 | ``--ratio-type``   | Type of image to use for ratio with T1w (default: T2w).    |
 |                    | Accepts any BIDS suffix available in ``anat``.             |
++--------------------+------------------------------------------------------------+
+| ``--skip-bias-correct``      | Add this parameter if you like to skip bias correction of T1w/T2w|
++--------------------+------------------------------------------------------------+
+| ``--keep-inter-files``      | Add this parameter if you like to keep all the intermediarily produced files (beware, the space eater)|
++--------------------+------------------------------------------------------------+
+| ``--run-SNR``      | Add this parameter if you like to compute intracortical SNR|
 +--------------------+------------------------------------------------------------+
 | ``-h, --help``     | Display help message and exit.                             |
 +--------------------+------------------------------------------------------------+
