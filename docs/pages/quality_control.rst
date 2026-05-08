@@ -27,8 +27,8 @@ Inside this folder, you will find several ``.png`` files showing the surfaces ov
 *   **The Red Line (Pial Surface):** This should follow the outer boundary of the cortex, perfectly tracing the interface between the gray matter and the CSF.
 *   **The Blue Line (White Matter Surface):** This should follow the "inner" boundary, tracing the transition from the base of the cortex into the underlying white matter.
 
-.. image:: ./images/tutorial_qc_registration.png
-   :height: 350px
+.. image:: ./images/qc_alignment.png
+   :height: 100px
    :align: center
    :alt: Example of successful surface-to-volume registration
 
