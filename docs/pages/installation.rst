@@ -30,12 +30,12 @@ To run CortPro, you will need:
    - See official installation instructions: `<https://docs.sylabs.io/guides/3.0/user-guide/installation.html>`_.
 
 2. **FreeSurfer**  
-   - Required for cortical surface reconstruction.  
+   - Required for cortical surface reconstruction and alignment procedures.  
    - A valid ``license.txt`` must be present in your FreeSurfer directory.  
    - Download FreeSurfer: `<https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_.
 
 3. **Singularity images**  
-   - Required container: ``micapipe-v0.2.3.simg``  
+   - Required container: ``cortpro.sif``  (see how to download below) 
    - Optional container: ``fastsurfer_gpu.sif`` (for when FreeSurfer outputs are missing).  
 
 -------------------------------------------------------------------------------
@@ -52,20 +52,27 @@ Quick setup
 
 2. **Set up environment variables**
 
-Make sure your environment can find FreeSurfer and Singularity. For example:
+Make sure your environment can find FreeSurfer. For example:
 
 .. code-block:: bash
 
+   # depends on your system, but for example:
    module load freesurfer/7.4
    export FREESURFER_HOME=/opt/freesurfer/7.4/
    source $FREESURFER_HOME/SetUpFreeSurfer.sh
 
 3. **Download containers**
 
-Place the following Singularity images in a chosen directory (e.g. ``/data/singularity``):
+.. code-block:: bash
 
-- ``micapipe-v0.2.3.simg`` (required)  
-- ``fastsurfer_gpu.sif`` (optional, GPU-accelerated)  
+   # provide the location of your singularity images
+   sing_dir=/data/singularity
+
+   # download the cortpro image
+   singularity pull ${sing_dir}/cortpro.sif docker://ghcr.io/caseypaquola/cortpro:latest
+
+   # ensure cortpro.sif and (optional) fastsurfer_gpu.sif are present in the directory
+   ls -l $sing_dir
 
 -------------------------------------------------------------------------------
 
