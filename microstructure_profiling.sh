@@ -20,12 +20,13 @@ show_help() {
     echo "  --fs-dir DIR               Path to the FreeSurfer directory [required] (should contain standard license file, 'license.txt')"
     echo "  --sing-dir DIR             Path to the directory with singularities [required] (must contain micapipe-v0.2.3.simg and, if Freesurfer output is not yet available, fastsurfer_gpu.sif)"
     echo "  --num-surfaces N           Number of intracortical surfaces (default: 14)"
-    echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage (default: fsaverage5) or native surfaces"
+    echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage number (default: fsaverage5), native or fsLR32k"
     echo "  --ratio-type NAME          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat"
     echo "  --t1-file PATH             Custom T1w (must be paired with --t2-file)"
     echo "  --t2-file PATH             Custom T2w (must be paired with --t1-file)"
     echo "  --skip-bias-correct        Option to turn off bias correction on T1w and T2w images"
     echo "  --keep-inter-files         Option to keep all intermediary files, which are otherwise removed in a final clean up"
+    echo "  --run-snr                  Option to compute SNR profiles"
     echo "  -h, --help                 Display this help message"
 }
 
@@ -46,6 +47,7 @@ T1_FILE=""
 T2_FILE=""
 SKIP_BC=0
 CLEAN_UP=1
+RUN_SNR=0
 RESLICE_MICRO=0
 REGISTER_T1=0
 
@@ -105,6 +107,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --keep-inter-files)
             CLEAN_UP=0
+            shift
+            ;;
+        --run-snr)
+            RUN_SNR=1
             shift
             ;;
         -h|--help)
@@ -260,12 +266,14 @@ fi
 # -----------------------------
 # Compute SNR of microstructure image
 # -----------------------------
-echo "[INFO] Computing SNR along profiles"
-singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
+if [[ "$RUN_SNR" == 1 ]]; then
+    echo "[INFO] Computing SNR along profiles"
+    singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     -B $OUTPUT_DIR/:/out_dir \
                     -B $TOOLBOX_BIN/:/toolbox_bin \
                     "${MICAPIPE_IMG}" \
                     /toolbox_bin/compute_snr.sh "$SUBJECT_ID" 9
+fi
 
 
     # -----------------------------
@@ -297,26 +305,45 @@ singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
                     --interp trilinear
 
+                # transform to desired output space
                 if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
                     # transform to fsaverage
                     mri_surf2surf --hemi ${hemi} \
                         --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
                         --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_MP-${n}.mgh
                 fi
-
-                # sample SNR along intracortical surface
-                mri_vol2surf --mov "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro_SNR.nii.gz \
-                    --regheader ${SUBJECT_ID} \
-                    --hemi ${hemi} \
-                    --surf $shortname \
-                    --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
-                    --interp trilinear
-
-                if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
+                if [[ "$SURF_OUT" == "fsLR32k" ]] ; then
                     # transform to fsaverage
                     mri_surf2surf --hemi ${hemi} \
-                        --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
-                        --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_SNR-${n}.mgh
+                        --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
+                        --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh
+                    # transform to fsLR32k using neuromaps
+                    python3 transform_fsaverage_to_fslr "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
+                fi
+
+                if [[ "$RUN_SNR" == 1 ]]; then
+                    # sample SNR along intracortical surface
+                    mri_vol2surf --mov "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_space-fsnative_desc-micro_SNR.nii.gz \
+                        --regheader ${SUBJECT_ID} \
+                        --hemi ${hemi} \
+                        --surf $shortname \
+                        --o "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
+                        --interp trilinear
+
+                    if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
+                        # transform to fsaverage
+                        mri_surf2surf --hemi ${hemi} \
+                            --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
+                            --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-${SURF_OUT}_SNR-${n}.mgh
+                    fi
+                    if [[ "$SURF_OUT" == "fsLR32k" ]] ; then
+                        # transform to fsaverage
+                        mri_surf2surf --hemi ${hemi} \
+                            --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
+                            --trgsubject $SURF_OUT --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh
+                        # transform to fsLR32k using neuromaps
+                        python3 transform_fsaverage_to_fslr "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_SNR-${n}.mgh
+                    fi
                 fi
             done
         ((Nsteps++))
@@ -330,10 +357,12 @@ singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                         "${MICAPIPE_IMG}" \
                         python3 /toolbox_bin/collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
 
-    singularity exec -B $OUTPUT_DIR/:/out_dir \
+    if [[ "$RUN_SNR" == 1 ]]; then
+        singularity exec -B $OUTPUT_DIR/:/out_dir \
                      -B $TOOLBOX_BIN/:/toolbox_bin \
                         "${MICAPIPE_IMG}" \
                         python3 /toolbox_bin/collate_SNR.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
+    fi
 
     ##------------------------------------------------------------------------------#
     # Clean up tmp folder and drop datalad files
