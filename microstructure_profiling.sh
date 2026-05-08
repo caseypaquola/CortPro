@@ -283,6 +283,9 @@ fi
     if [[ "$SURF_OUT" == *"fsaverage"* ]] ; then
         ln -s $FREESURFER_HOME/subjects/$SURF_OUT $SUBJECTS_DIR
     fi
+    if [[ "$SURF_OUT" == "fsLR32K" ]] ; then
+        ln -s $FREESURFER_HOME/subjects/fsaverage $SUBJECTS_DIR
+    fi
 
     for hemi in lh rh ; do
         [[ $hemi == lh ]] && HEMI=L || HEMI=R
