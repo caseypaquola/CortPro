@@ -1,8 +1,9 @@
 name: Build and Publish Docker
 on:
-  push:
-    branches: [ "main" ]  # Triggers whenever you push to main
-  workflow_dispatch:      # Allows you to run it manually for testing
+  schedule:
+    # This runs at the start of every hour (UTC)
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   build-and-push:
