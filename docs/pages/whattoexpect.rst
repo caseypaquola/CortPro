@@ -29,13 +29,13 @@ To move from visual inspection to statistical analysis, CortPro surmises the sha
 
 When projecting these moments onto the cortical surface, we observe specific spatial patterns:
 
-*   **$\mu_0$ through $\mu_2$** (Mean, Standard Deviation, and Skewness) typically reveal unique patterns of spatial differentiation across the cortex.
-*   **$\mu_3$ and $\mu_4$** (Kurtosis and beyond) often appear very similar to $\mu_2$ when using myelin-sensitive MRI.
+*   :math:\mu_0 through :math:\mu_2 (amplitude, mean, standard deviation) typically reveal unique patterns of spatial differentiation across the cortex.
+*   :math:\mu_3 and :math:\mu_4 (skewness and kurtosis) are very similar to :math:\mu_2 and :math:\mu_1, respectively, when using myelin-sensitive MRI.
 
 .. note::
    **A Note on Resolution:** In histology, the high spatial resolution results in bumpy, highly differentiated profiles where higher moments provide unique information. In MRI, the profiles are smoother by nature. We retain these higher moments in the CortPro package for researchers working with ultra-high resolution data. 
 
-At the individual subject level, vertex-wise maps (shown below on the fsLR 32k surface) are not inherently smooth. However, when averaging across a group (e.g., $n=40$), the large-scale biological patterns become strikingly apparent and spatially continuous.
+At the individual subject level, vertex-wise maps (shown below on the fsLR 32k surface) are not inherently smooth. However, when averaging across a group, the large-scale biological patterns become strikingly apparent and spatially continuous.
 
 .. image:: ./images/tutorial_moments.png
    :height: 350px
@@ -47,11 +47,11 @@ Numerical Distributions: What is "Normal"?
 
 The numerical range of your moment values is highly dependent on your input data:
 
-1.  **$\mu_0$ (The Mean):** This is tied to the intensity range of your image. Since we are using R1 here, $\mu_0$ values relate directly to $s^{-1}$ (the inverse of relaxation time).
-2.  **Higher Moments:** These pertain to the depth distribution. In our default pipeline for myelin-sensitive MRI with 14 intracortical samples, **$\mu_1$** (the centroid) is usually balanced near the center (around depth 7). You can generally expect **$\mu_2$** to be roughly half the value of $\mu_1$.
+1. :math:\mu_0: This is tied to the intensity range of your image. Since we are using R1 here, $\mu_0$ values relate directly to the inverse of relaxation time.
+2.  **Higher Moments:** These pertain to the depth distribution. For myelin-sensitive MRI, :math:\mu_1 is usually balanced near the center (around depth 7 with the default of 14 intracortical samples), while you can generally expect :math:\mu_2 to be roughly half the value of :math:\mu_1.
 
 .. image:: ./images/tutorial_distributions.png
-   :height: 350px
+   :height: 200px
    :align: center
    :alt: Statistical distribution of moments
 
