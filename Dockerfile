@@ -47,19 +47,6 @@ RUN apt-get update -qq \
     && echo "Installing FSL ..." \
     && curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | python3 - -d /opt/fsl-6.0.7.1 -V 6.0.7.1
 
-# --- FREESURFER SETUP ---
-ENV OS="Linux" \
-    PATH="/opt/freesurfer-7.4.1/bin:/opt/freesurfer-7.4.1/fsfast/bin:/opt/freesurfer-7.4.1/tktools:/opt/freesurfer-7.4.1/mni/bin:$PATH" \
-    FREESURFER_HOME="/opt/freesurfer-7.4.1"
-
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends bc ca-certificates curl libgomp1 libxmu6 libxt6 perl tcsh \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /opt/freesurfer-7.4.1 \
-    && curl -fL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.4.1/freesurfer-linux-centos7_x86_64-7.4.1.tar.gz \
-    | tar -xz -C /opt/freesurfer-7.4.1 --owner root --group root --no-same-owner --transform='s,freesurfer/,,' \
-         --exclude='average/mult-comp-cor' --exclude='lib/cuda' --exclude='lib/qt'
-
 # --- ANTs SETUP ---
 ENV ANTSPATH="/opt/ants-2.4.3/" \
     PATH="/opt/ants-2.4.3:$PATH"
@@ -68,7 +55,7 @@ RUN curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.4.
 
 # --- PYTHON & NEUROMAPS SETUP ---
 
-# 1. System libraries
+# 1. System libraries (Ensuring SSL and basic libs are present for the solver)
 RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
     bzip2 ca-certificates curl libglib2.0-0 libxext6 libsm6 libxrender1 \
     && rm -rf /var/lib/apt/lists/*
@@ -78,13 +65,15 @@ RUN curl -fsSL -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Minicond
     && bash /tmp/miniconda.sh -b -p /opt/miniconda-latest \
     && rm -f /tmp/miniconda.sh
 
-# 3. Create a clean environment (cortpro) to avoid Base Environment conflicts
-RUN /opt/miniconda-latest/bin/conda create -n cortpro -y -c conda-forge \
-    python=3.9 \
-    numpy=1.26.4 \
-    pandas=2.2.2 \
-    scipy=1.11.4 \
-    scikit-learn=1.3.2
+# 3. Install MAMBA in base and create the environment
+# Mamba is much more robust at solving scientific dependency trees than standard Conda
+RUN /opt/miniconda-latest/bin/conda install -n base -c conda-forge mamba -y \
+    && /opt/miniconda-latest/bin/mamba create -n cortpro -y -c conda-forge \
+        python=3.9 \
+        numpy=1.26.4 \
+        pandas=2.2.2 \
+        scipy=1.11.4 \
+        "scikit-learn>=1.3.0,<1.4.0"
 
 # 4. Install Neuro packages using the env-specific pip
 RUN /opt/miniconda-latest/envs/cortpro/bin/pip install --no-cache-dir \
