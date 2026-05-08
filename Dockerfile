@@ -132,28 +132,29 @@ RUN apt-get update -qq \
     && mv /opt/ants-2.4.3/bin/* /opt/ants-2.4.3 \
     && rm ants.zip
     
-ENV CONDA_DIR="/opt/miniconda-latest" \
-    PATH="/opt/miniconda-latest/bin:$PATH" \
-    PYTHONNOUSERSITE=1
+# 1. Install system requirements for Miniconda and scientific libs
+RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
+    bzip2 ca-certificates curl libglib2.0-0 libxext6 libsm6 libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends bzip2 ca-certificates curl \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -fsSL -o /tmp/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+# 2. Install Miniconda
+RUN curl -fsSL -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash /tmp/miniconda.sh -b -p /opt/miniconda-latest \
-    && rm -f /tmp/miniconda.sh \
-    && /opt/miniconda-latest/bin/conda config --system --prepend channels conda-forge \
+    && rm -f /tmp/miniconda.sh
+
+# 3. Configure Conda and Install Core Python Stack
+# We use 'conda install' separately to catch resolution errors early
+RUN /opt/miniconda-latest/bin/conda config --system --prepend channels conda-forge \
     && /opt/miniconda-latest/bin/conda config --set channel_priority strict \
-    # Install Python and the heavy math libs via Conda first
-    && /opt/miniconda-latest/bin/conda install -y \
-       python=3.9 \
-       numpy=2.0.2 \
-       pandas=2.2.2 \
-    # Then use Pip ONLY for the neuro-specific packages
-    && /opt/miniconda-latest/bin/pip install --no-cache-dir \
-       "nibabel==5.2.1" \
-       "nilearn==0.10.4" \
-       "neuromaps==0.0.5" \
-    && /opt/miniconda-latest/bin/conda clean --all --yes
+    && /opt/miniconda-latest/bin/conda install -y python=3.9 numpy=1.26.4 pandas=2.2.2
+
+# 4. Install Neuroimaging packages via Pip
+RUN /opt/miniconda-latest/bin/pip install --no-cache-dir \
+    nibabel==5.2.1 \
+    nilearn==0.10.4 \
+    neuromaps==0.0.5
+
+# 5. Cleanup
+RUN /opt/miniconda-latest/bin/conda clean --all --yes
 
 ENTRYPOINT ["/neurodocker/startup.sh"]
