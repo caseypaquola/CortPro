@@ -47,7 +47,7 @@ Numerical Distributions: What is "Normal"?
 
 The numerical range of your moment values is highly dependent on your input data:
 
-1. μ_0: This is tied to the intensity range of your image. Since we are using R1 here, $\mu_0$ values relate directly to the inverse of relaxation time.
+1. **μ_0**: This is tied to the intensity range of your image. Since we are using R1 here, μ_0 values relate directly to the inverse of relaxation time.
 2.  **Higher Moments:** These pertain to the depth distribution. For myelin-sensitive MRI, μ_1 is usually balanced near the center (around depth 7 with the default of 14 intracortical samples), while you can generally expect μ_2 to be roughly half the value of μ_1.
 
 .. image:: ./images/tutorial_distributions.png
