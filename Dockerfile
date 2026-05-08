@@ -142,15 +142,18 @@ RUN apt-get update -qq \
     && curl -fsSL -o /tmp/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash /tmp/miniconda.sh -b -p /opt/miniconda-latest \
     && rm -f /tmp/miniconda.sh \
-    && conda config --system --prepend channels conda-forge \
-    && conda config --set channel_priority strict \
-    && conda install -y python=3.9 \
-    && pip install --no-cache-dir \
-       "numpy==2.0.2" \
-       "pandas==2.2.2" \
+    && /opt/miniconda-latest/bin/conda config --system --prepend channels conda-forge \
+    && /opt/miniconda-latest/bin/conda config --set channel_priority strict \
+    # Install Python and the heavy math libs via Conda first
+    && /opt/miniconda-latest/bin/conda install -y \
+       python=3.9 \
+       numpy=2.0.2 \
+       pandas=2.2.2 \
+    # Then use Pip ONLY for the neuro-specific packages
+    && /opt/miniconda-latest/bin/pip install --no-cache-dir \
        "nibabel==5.2.1" \
        "nilearn==0.10.4" \
        "neuromaps==0.0.5" \
-    && conda clean --all --yes
+    && /opt/miniconda-latest/bin/conda clean --all --yes
 
 ENTRYPOINT ["/neurodocker/startup.sh"]
