@@ -70,7 +70,7 @@ Tips for Getting Started
    :caption: Understanding the output
 
    pages/whattoexpect
-   pages/QC
+   pages/quality_control
 
 
 __________________________________________________________________________________________________
