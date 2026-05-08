@@ -60,6 +60,7 @@ Tips for Getting Started
    :hidden:
    :caption: Getting started
    
+   pages/installation
    pages/usage
 
 
