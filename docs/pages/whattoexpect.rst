@@ -29,8 +29,8 @@ To move from visual inspection to statistical analysis, CortPro surmises the sha
 
 When projecting these moments onto the cortical surface, we observe specific spatial patterns:
 
-*   :math:\mu_0 through :math:\mu_2 (amplitude, mean, standard deviation) typically reveal unique patterns of spatial differentiation across the cortex.
-*   :math:\mu_3 and :math:\mu_4 (skewness and kurtosis) are very similar to :math:\mu_2 and :math:\mu_1, respectively, when using myelin-sensitive MRI.
+*   μ_0 through μ_2 (amplitude, mean, standard deviation) typically reveal unique patterns of spatial differentiation across the cortex.
+*   μ_3 and μ_4 (skewness and kurtosis) are very similar to μ_2 and μ_1, respectively, when using myelin-sensitive MRI.
 
 .. note::
    **A Note on Resolution:** In histology, the high spatial resolution results in bumpy, highly differentiated profiles where higher moments provide unique information. In MRI, the profiles are smoother by nature. We retain these higher moments in the CortPro package for researchers working with ultra-high resolution data. 
@@ -47,8 +47,8 @@ Numerical Distributions: What is "Normal"?
 
 The numerical range of your moment values is highly dependent on your input data:
 
-1. :math:\mu_0: This is tied to the intensity range of your image. Since we are using R1 here, $\mu_0$ values relate directly to the inverse of relaxation time.
-2.  **Higher Moments:** These pertain to the depth distribution. For myelin-sensitive MRI, :math:\mu_1 is usually balanced near the center (around depth 7 with the default of 14 intracortical samples), while you can generally expect :math:\mu_2 to be roughly half the value of :math:\mu_1.
+1. μ_0: This is tied to the intensity range of your image. Since we are using R1 here, $\mu_0$ values relate directly to the inverse of relaxation time.
+2.  **Higher Moments:** These pertain to the depth distribution. For myelin-sensitive MRI, μ_1 is usually balanced near the center (around depth 7 with the default of 14 intracortical samples), while you can generally expect μ_2 to be roughly half the value of μ_1.
 
 .. image:: ./images/tutorial_distributions.png
    :height: 200px
