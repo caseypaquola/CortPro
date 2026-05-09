@@ -72,13 +72,14 @@ RUN /opt/miniforge/bin/mamba install -y -c conda-forge \
     numpy=1.23.5 \
     scipy=1.10.1 \
     pandas=2.0.3 \
+    nibabel==5.2.1 \
+    nilearn==0.10.4 \
     && /opt/miniforge/bin/mamba clean --all --yes
 
 # 4. Install Neuro packages using the env-specific pip
 RUN /opt/miniforge/envs/cortpro/bin/pip install --no-cache-dir \
-    nibabel==5.2.1 \
-    nilearn==0.10.4 \
-    neuromaps==0.0.5
+    neuromaps==0.0.5 \
+    packaging
 
 # 5. Set Path and Python Shield
 ENV PATH="/opt/miniforge/envs/cortpro/bin:$PATH" \
