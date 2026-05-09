@@ -44,7 +44,7 @@ What CortPro does
 Tips for Getting Started
 ****************************
 
-* Review the :doc:`installation instructions <pages/installation>` to set up dependencies (Singularity, FreeSurfer, micapipe).  
+* Review the :doc:`installation instructions <pages/installation>` to set up dependencies (essentially, Freesurfer + one container).  
 * Check the :doc:`general usage guide <pages/usage>` for command-line examples.  
 * Explore the tutorials and examples.  
 * Reach out if you have questions, suggestions, or want to contribute 🤙  
