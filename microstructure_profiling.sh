@@ -322,7 +322,7 @@ fi
                         --trgsubject fsaverage --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.shape.gii
                     # transform to fsLR32k using neuromaps
                     singularity exec -B $OUTPUT_DIR/:/out_dir \
-                                        ${SCRIPT_DIR}/templates/:templates \
+                                        ${SCRIPT_DIR}/templates/:/templates \
                                         "${SING_IMG}" \
                                         wb_command metric-resample \
                                         /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.shape.gii \
