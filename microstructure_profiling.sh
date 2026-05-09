@@ -331,7 +331,7 @@ fi
                                         ADAP_BARY_AREA \
                                         /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii \
                                         -area-surfs \
-                                        /templates/fsaverage.${HEMI}.midthickness_va_avg.32k_fsavg_${HEMI}.shape.gii \
+                                        /templates/fsaverage.${HEMI}.midthickness_va_avg.164k_fsavg_${HEMI}.shape.gii \
                                         /templates/fs_LR.${HEMI}.midthickness_va_avg.32k_fs_LR.shape.gii
                     # convert back to mgh
                     mri_surf2surf /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
