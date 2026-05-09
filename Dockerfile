@@ -55,38 +55,38 @@ RUN curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.4.
 
 # --- PYTHON & NEUROMAPS SETUP ---
 
-# 1. System libraries (Ensuring SSL and basic libs are present for the solver)
+# 1. System requirements
 RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
     bzip2 ca-certificates curl libglib2.0-0 libxext6 libsm6 libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Install Miniconda
-RUN curl -fsSL -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && bash /tmp/miniconda.sh -b -p /opt/miniconda-latest \
-    && rm -f /tmp/miniconda.sh
+# 2. Install Miniforge (Miniconda + Mamba pre-installed)
+# This avoids the "conda install mamba" failure entirely.
+RUN curl -fsSL -o /tmp/miniforge.sh https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
+    && bash /tmp/miniforge.sh -b -p /opt/miniforge \
+    && rm -f /tmp/miniforge.sh
 
-# 3. Install MAMBA in base and create the environment
-# Mamba is much more robust at solving scientific dependency trees than standard Conda
-RUN /opt/miniconda-latest/bin/conda install -n base -c conda-forge mamba -y \
-    && /opt/miniconda-latest/bin/mamba create -n cortpro -y -c conda-forge \
-        python=3.9 \
-        numpy=1.26.4 \
-        pandas=2.2.2 \
-        scipy=1.11.4 \
-        "scikit-learn>=1.3.0,<1.4.0"
+# 3. Create the environment using Mamba directly
+# Removing strict pins on minor versions to allow the solver to breathe
+RUN /opt/miniforge/bin/mamba create -n cortpro -y \
+    python=3.9 \
+    numpy=1.26 \
+    pandas=2.2 \
+    scipy=1.11 \
+    scikit-learn=1.3
 
 # 4. Install Neuro packages using the env-specific pip
-RUN /opt/miniconda-latest/envs/cortpro/bin/pip install --no-cache-dir \
+RUN /opt/miniforge/envs/cortpro/bin/pip install --no-cache-dir \
     nibabel==5.2.1 \
     nilearn==0.10.4 \
     neuromaps==0.0.5 \
     packaging
 
 # 5. Set Path and Python Shield
-ENV PATH="/opt/miniconda-latest/envs/cortpro/bin:$PATH" \
+ENV PATH="/opt/miniforge/envs/cortpro/bin:$PATH" \
     PYTHONNOUSERSITE=1
 
 # 6. Cleanup
-RUN /opt/miniconda-latest/bin/conda clean --all --yes
+RUN /opt/miniforge/bin/mamba clean --all --yes
 
 ENTRYPOINT ["/neurodocker/startup.sh"]
