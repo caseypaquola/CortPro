@@ -25,19 +25,21 @@ Dependencies
 
 To run CortPro, you will need:
 
-1. **Singularity**  
-   - Must be installed and available on ``$PATH``.  
-   - See official installation instructions: `<https://docs.sylabs.io/guides/3.0/user-guide/installation.html>`_.
+1. **Singularity**
 
-2. **FreeSurfer**  
-   - Required for cortical surface reconstruction and alignment procedures.  
-   - A valid ``license.txt`` must be present in your FreeSurfer directory.  
-   - Download FreeSurfer: `<https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_.
+   * Must be installed and available on ``$PATH``.
+   * See official `installation instructions <https://docs.sylabs.io/guides/3.0/user-guide/installation.html>`_.
 
-3. **Singularity images**  
-   - Required container: ``cortpro.sif``  (see how to download below) 
-   - Optional container: ``fastsurfer_gpu.sif`` (for when FreeSurfer outputs are missing).  
+2. **FreeSurfer**
 
+   * Required for cortical surface reconstruction and alignment procedures.
+   * A valid ``license.txt`` must be present in your FreeSurfer directory.
+   * See download and installation instriuctions > <https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>
+
+3. **Singularity images**
+
+   * Required container: ``cortpro.sif`` (see how to download below).
+   * Optional container: ``fastsurfer_gpu.sif`` (for when FreeSurfer outputs are missing).
 -------------------------------------------------------------------------------
 
 Quick setup
