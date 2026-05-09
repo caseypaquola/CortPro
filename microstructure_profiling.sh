@@ -319,12 +319,22 @@ fi
                     # transform to fsaverage
                     mri_surf2surf --hemi ${hemi} \
                         --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_MP-${n}.mgh \
-                        --trgsubject fsaverage --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh
+                        --trgsubject fsaverage --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.shape.gii
                     # transform to fsLR32k using neuromaps
                     singularity exec -B $OUTPUT_DIR/:/out_dir \
-                                        -B $TOOLBOX_BIN/:/toolbox_bin \
+                                        ${SCRIPT_DIR}/templates/:templates \
                                         "${SING_IMG}" \
-                                        python3 /toolbox_bin/transform_fsaverage_to_fslr.py /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
+                                        wb_command metric-resample \
+                                        /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.shape.gii \
+                                        /templates/fsaverage_std_sphere.${HEMI}.164k_fsavg_L.surf.gii \
+                                        /templates/fs_LR-deformed_to-fsaverage.${HEMI}.sphere.32k_fs_LR.surf.gii \
+                                        ADAP_BARY_AREA \
+                                        /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii \
+                                        -area-surfs \
+                                        /templates/fsaverage.${HEMI}.midthickness_va_avg.32k_fsavg_L.shape.gii \
+                                        /templates/fs_LR.${HEMI}.midthickness_va_avg.32k_fs_LR.shape.gii
+                    # convert back to mgh
+                    mri_surf2surf /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
                 fi
 
                 if [[ "$RUN_SNR" == 1 ]]; then
