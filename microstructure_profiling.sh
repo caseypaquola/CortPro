@@ -324,7 +324,7 @@ fi
                     singularity exec -B $OUTPUT_DIR:/out_dir \
                                         -B $SCRIPT_DIR/templates:/templates \
                                         "${SING_IMG}" \
-                                        wb_command metric-resample \
+                                        wb_command -metric-resample \
                                         /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.shape.gii \
                                         /templates/fsaverage_std_sphere.${HEMI}.164k_fsavg_L.surf.gii \
                                         /templates/fs_LR-deformed_to-fsaverage.${HEMI}.sphere.32k_fs_LR.surf.gii \
