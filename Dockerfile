@@ -67,20 +67,18 @@ RUN curl -fsSL -o /tmp/miniforge.sh https://github.com/conda-forge/miniforge/rel
     && rm -f /tmp/miniforge.sh
 
 # 3. Create the environment using Mamba directly
-# Removing strict pins on minor versions to allow the solver to breathe
-RUN /opt/miniforge/bin/mamba create -n cortpro -y \
+RUN /opt/miniforge/bin/mamba install -y -c conda-forge \
     python=3.9 \
-    numpy=1.26 \
-    pandas=2.2 \
-    scipy=1.11 \
-    scikit-learn=1.3
+    numpy=1.23.5 \
+    scipy=1.10.1 \
+    pandas=2.0.3 \
+    && /opt/miniforge/bin/mamba clean --all --yes
 
 # 4. Install Neuro packages using the env-specific pip
 RUN /opt/miniforge/envs/cortpro/bin/pip install --no-cache-dir \
     nibabel==5.2.1 \
     nilearn==0.10.4 \
-    neuromaps==0.0.5 \
-    packaging
+    neuromaps==0.0.5
 
 # 5. Set Path and Python Shield
 ENV PATH="/opt/miniforge/envs/cortpro/bin:$PATH" \
