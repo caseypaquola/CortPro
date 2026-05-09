@@ -142,12 +142,10 @@ if ! command -v singularity &> /dev/null; then
     exit 1
 fi
 
-MICAPIPE_IMG="$SING_DIR/micapipe-v0.2.3.simg"
-if [[ ! -f $MICAPIPE_IMG ]]; then
-    echo "[ERROR] micapipe-v0.2.3.simg not found at: $SING_DIR"
+SING_IMG="$SING_DIR/cortpro.sif"
+if [[ ! -f $SING_IMG ]]; then
+    echo "[ERROR] cortpro.sif not found at: $SING_DIR"
     exit 1
-else
-    singularity exec $MICAPIPE_IMG pip install numpy==1.21.5 nibabel==4.0.2
 fi
 
 # Validate NUM_SURFACES is a positive integer
@@ -259,7 +257,7 @@ else
         singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     -B $OUTPUT_DIR/:/out_dir \
                     -B $TOOLBOX_BIN/:/toolbox_bin \
-                    "${MICAPIPE_IMG}" \
+                    "${SING_IMG}" \
                     /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
     fi
 fi
@@ -273,7 +271,7 @@ if [[ "$RUN_SNR" == 1 ]]; then
     singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     -B $OUTPUT_DIR/:/out_dir \
                     -B $TOOLBOX_BIN/:/toolbox_bin \
-                    "${MICAPIPE_IMG}" \
+                    "${SING_IMG}" \
                     /toolbox_bin/compute_snr.sh "$SUBJECT_ID" 9
 fi
 
@@ -325,7 +323,7 @@ fi
                     # transform to fsLR32k using neuromaps
                     singularity exec -B $OUTPUT_DIR/:/out_dir \
                                         -B $TOOLBOX_BIN/:/toolbox_bin \
-                                        "${MICAPIPE_IMG}" \
+                                        "${SING_IMG}" \
                                         python3 /toolbox_bin/transform_fsaverage_to_fslr.py /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_MP-${n}.mgh /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
                 fi
 
@@ -352,7 +350,7 @@ fi
                         # transform to fsLR32k using neuromaps
                         singularity exec -B $OUTPUT_DIR/:/out_dir \
                                         -B $TOOLBOX_BIN/:/toolbox_bin \
-                                        "${MICAPIPE_IMG}" \
+                                        "${SING_IMG}" \
                                         python3 /toolbox_bin/transform_fsaverage_to_fslr.py /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_SNR-${n}.mgh
                     fi
                 fi
@@ -365,13 +363,13 @@ fi
     echo "[INFO] Collating microstructure profiles and computing moments for shape analysis"
     singularity exec -B $OUTPUT_DIR/:/out_dir \
                      -B $TOOLBOX_BIN/:/toolbox_bin \
-                        "${MICAPIPE_IMG}" \
+                        "${SING_IMG}" \
                         python3 /toolbox_bin/collate_MP.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
 
     if [[ "$RUN_SNR" == 1 ]]; then
         singularity exec -B $OUTPUT_DIR/:/out_dir \
                      -B $TOOLBOX_BIN/:/toolbox_bin \
-                        "${MICAPIPE_IMG}" \
+                        "${SING_IMG}" \
                         python3 /toolbox_bin/collate_SNR.py --output_dir /out_dir/ --subject_id "$SUBJECT_ID" --num_surfaces "$NUM_SURFACES" --surface_output "$SURF_OUT"
     fi
 
