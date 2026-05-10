@@ -83,33 +83,37 @@ Optional arguments
 
 -------------------------------------------------------------------------------
 
-Example workflows
------------------
+.. _example_commands:
 
-**Case 1: Full run (no preprocessing yet completed)**
-
-.. code-block:: bash
-
-   ./microstructure_profiling.sh \
-      --anat-dir $anat_dir \
-      --subject-id $subject_id \
-      --subjects-dir $subjects_dir \
-      --output-dir $output_dir \
-      --fs-dir $fs_dir \
-      --sing-dir $sing_dir
-
-**Case 2: Precomputed micro-image, no FreeSurfer output available**
+Example commands
+================
 
 .. code-block:: bash
 
-   ./microstructure_profiling.sh \
-      --micro-image $micro_image \
-      --anat-dir $anat_dir \
-      --subject-id $subject_id \
-      --subjects-dir $subjects_dir \
-      --output-dir $output_dir \
-      --fs-dir $fs_dir \
-      --sing-dir $sing_dir
+   # Set arguments
+   fs_dir=$FREESURFER_HOME
+   sing_dir=/home/user/singularities/                  # where the necessary containers are located
+   subject_id=sub-001                  
+   anat_dir="/BIDS/raw_data/$subject_id/anat/"
+   subjects_dir="/BIDS/derivatives/fastsurfer/"        # SUBJECTS_DIR of FreeSurfer output
+   output_dir="/BIDS/derivatives/MP_output/"           # where the output should be saved
+
+   cd CortPro
+
+   # Case 1: Full run (no preprocessing yet completed)
+   ./microstructure_profiling.sh --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+   # Case 2: Precomputed micro-image, but no FreeSurfer output available
+   ./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+   # Case 3A: FreeSurfer output available, as well as raw T1 and T2 (housed in BIDS anat directory)
+   ./microstructure_profiling.sh --micro-image $micro_image --anat-dir $anat_dir --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
+
+   # Case 3B: FreeSurfer output available, custom T1 and T2 provided
+   ./microstructure_profiling.sh --t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir --skip-bias-correct
+
+   # Case 4: Freesurfer output and micro-image both already available
+   ./microstructure_profiling.sh --micro-image $micro_image --subject-id $subject_id --subjects-dir $subjects_dir --output-dir $output_dir --fs-dir $fs_dir --sing-dir $sing_dir
 
 -------------------------------------------------------------------------------
 
