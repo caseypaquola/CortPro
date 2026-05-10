@@ -334,7 +334,9 @@ fi
                                         /templates/fsaverage.${HEMI}.midthickness_va_avg.164k_fsavg_${HEMI}.shape.gii \
                                         /templates/fs_LR.${HEMI}.midthickness_va_avg.32k_fs_LR.shape.gii
                     # convert back to mgh
-                    mris_convert $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
+                    mris_convert $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii \
+                        $SCRIPT_DIR/templates/fs_LR-deformed_to-fsaverage.${HEMI}.sphere.32k_fs_LR.surf.gii\
+                        $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
                 fi
 
                 if [[ "$RUN_SNR" == 1 ]]; then
