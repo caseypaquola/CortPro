@@ -333,12 +333,6 @@ fi
                                         -area-metrics \
                                         /templates/fsaverage.${HEMI}.midthickness_va_avg.164k_fsavg_${HEMI}.shape.gii \
                                         /templates/fs_LR.${HEMI}.midthickness_va_avg.32k_fs_LR.shape.gii
-                    # convert back to mgh
-                    mris_convert -c $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii \
-                        $SCRIPT_DIR/templates/fs_LR-deformed_to-fsaverage.${HEMI}.sphere.32k_fs_LR.surf.gii \
-                        $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
-                    mv $OUTPUT_DIR/"$SUBJECT_ID"/unknown."$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
-
                 fi
 
                 if [[ "$RUN_SNR" == 1 ]]; then
@@ -361,11 +355,19 @@ fi
                         mri_surf2surf --hemi ${hemi} \
                             --srcsubject $SUBJECT_ID --srcsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsnative_SNR-${n}.mgh \
                             --trgsubject fsaverage --trgsurfval "$OUTPUT_DIR"/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh
-                        # transform to fsLR32k using neuromaps
-                        singularity exec -B $OUTPUT_DIR/:/out_dir \
-                                        -B $TOOLBOX_BIN/:/toolbox_bin \
+                        # transform to fsLR32k using wb_command
+                        singularity exec -B $OUTPUT_DIR:/out_dir \
+                                        -B $SCRIPT_DIR/templates:/templates \
                                         "${SING_IMG}" \
-                                        python3 /toolbox_bin/transform_fsaverage_to_fslr.py /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.mgh /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_SNR-${n}.mgh
+                                        wb_command -metric-resample \
+                                        /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsaverage_SNR-${n}.shape.gii \
+                                        /templates/fsaverage_std_sphere.${HEMI}.164k_fsavg_${HEMI}.surf.gii \
+                                        /templates/fs_LR-deformed_to-fsaverage.${HEMI}.sphere.32k_fs_LR.surf.gii \
+                                        ADAP_BARY_AREA \
+                                        /out_dir/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_SNW-${n}.shape.gii \
+                                        -area-metrics \
+                                        /templates/fsaverage.${HEMI}.midthickness_va_avg.164k_fsavg_${HEMI}.shape.gii \
+                                        /templates/fs_LR.${HEMI}.midthickness_va_avg.32k_fs_LR.shape.gii
                     fi
                 fi
             done
