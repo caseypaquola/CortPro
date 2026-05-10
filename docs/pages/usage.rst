@@ -22,12 +22,15 @@ General command
       --sing-dir /path/to/singularity/ \
       [--micro-image /path/to/micro.nii.gz] \
       [--anat-dir /path/to/bids/sub-001/anat/] \
-      [--t1-file /path/to/T1w.nii.gz --t2-file /path/to/T2w.nii.gz] \
-      [--ratio-type T2w] \
-      [--skip-bias-correct] \
-      [--keep-inter-files] \
       [--num-surfaces 14] \
       [--surface-output fsaverage5]
+      [--ratio-type T2w] \
+      [--t1-file /path/to/T1w.nii.gz] \
+      [--t2-file /path/to/T2w.nii.gz] \
+      [--skip-bias-correct] \
+      [--keep-inter-files] \
+      [--run-SNR]
+      
 
 -------------------------------------------------------------------------------
 
