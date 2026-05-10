@@ -9,14 +9,30 @@ def load_MP(OUTPUT_DIR, SUBJECT_ID, NUM_SURFACES, SURF_OUT, hemis=['L', 'R']):
     for n in range(1, NUM_SURFACES + 1):
         row_data = []
         for hemi in hemis:
-            filename = os.path.join(
+            # Construct the base path without extension
+            base_path = os.path.join(
                 OUTPUT_DIR,
                 SUBJECT_ID,
-                f"{SUBJECT_ID}_hemi-{hemi}_surf-{SURF_OUT}_SNR-{n}.mgh"
+                f"{SUBJECT_ID}_hemi-{hemi}_surf-{SURF_OUT}_SNR-{n}"
             )
+            
+            # Check for .mgh first, then .shape.gii
+            if os.path.exists(f"{base_path}.mgh"):
+                filename = f"{base_path}.mgh"
+            elif os.path.exists(f"{base_path}.shape.gii"):
+                filename = f"{base_path}.shape.gii"
+            else:
+                raise FileNotFoundError(f"Could not find .mgh or .shape.gii for {base_path}")
+
             print(f"Loading: {filename}")
             img = nib.load(filename)
-            data = np.squeeze(img.get_fdata())  # Remove singleton dims
+            
+            # nibabel loads GIFTI data into a list of arrays; we take the first
+            if filename.endswith('.gii'):
+                data = img.agg_data()
+            else:
+                data = np.squeeze(img.get_fdata())
+                
             row_data.append(data)
 
         # Concatenate left and right hemisphere horizontally
