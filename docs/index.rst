@@ -21,7 +21,7 @@
 🧠 CortPro (**Cortical Profiler**) is an open-source toolbox for generating and analysing **intracortical microstructure profiles**.  
 It provides a flexible framework to profile cortical depth-dependent signals across imaging modalities and resolutions—from MRI to 3D histology.
 
-🚀 With only two inputs—an anatomical MRI suitable for cortical surface reconstruction (e.g., T1w) and a microstructure-sensitive image (e.g., qT1, T1w/T2w, MT)—CortPro enables reproducible microstructural mapping and advanced profiling workflows.
+🚀 With only two inputs—an anatomical MRI suitable for cortical surface reconstruction (e.g., T1w) and a microstructure-sensitive image (e.g., qT1, T1w/T2w, MT)—CortPro enables reproducible microstructural mapping within the cortex.
 
 -------------------------------------------------------------------------------
 
@@ -30,9 +30,10 @@ What CortPro does
 - Generation and characterisation of intracortical microstructure profiles  
 - Co-registration of microstructural images to cortical surfaces  
 - Flexible sampling precision (user-defined number of cortical depths)  
-- Versatile across modalities (MRI, histology, etc.)  
+- Versatile application across modalities (MRI, histology, etc.)  
 - (Optional) Bias-corrected T1w/T2w images  
-- (Optional) Cortical surface reconstruction  
+- (Optional) Cortical surface reconstruction
+- (Optional) Computation of intracortical SNR 
 
 **Key outputs include:**  
 - ``MP.csv`` → intensity changes across cortical depths (rows = depths, columns = vertices)  
@@ -43,9 +44,9 @@ What CortPro does
 Tips for Getting Started
 ****************************
 
-* Review the :doc:`installation instructions <pages/installation>` to set up dependencies (Singularity, FreeSurfer, micapipe).  
+* Review the :doc:`installation instructions <pages/installation>` to set up dependencies (essentially, Freesurfer + one container).  
 * Check the :doc:`general usage guide <pages/usage>` for command-line examples.  
-* Explore tutorials to see practical workflows and applications across different modalities.  
+* Explore the tutorials and examples.  
 * Reach out if you have questions, suggestions, or want to contribute 🤙  
 
 -------------------------------------------------------------------------------
@@ -58,10 +59,18 @@ Tips for Getting Started
 .. toctree::
    :maxdepth: 1
    :hidden:
-   :caption: Getting started
+   :caption: Getting Started
    
    pages/installation
    pages/usage
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Understanding the output
+
+   pages/whattoexpect
+   pages/quality_control
 
 
 __________________________________________________________________________________________________
