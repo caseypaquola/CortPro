@@ -337,6 +337,8 @@ fi
                     mris_convert -c $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.shape.gii \
                         $SCRIPT_DIR/templates/fs_LR-deformed_to-fsaverage.${HEMI}.sphere.32k_fs_LR.surf.gii \
                         $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
+                    mv $OUTPUT_DIR/"$SUBJECT_ID"/unknown."$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh $OUTPUT_DIR/"$SUBJECT_ID"/"$SUBJECT_ID"_hemi-${HEMI}_surf-fsLR32k_MP-${n}.mgh
+
                 fi
 
                 if [[ "$RUN_SNR" == 1 ]]; then
