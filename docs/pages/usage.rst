@@ -60,15 +60,15 @@ Optional arguments
 +--------------------------+------------------------------------------------------------+
 | Argument                 | Description                                                |
 +==========================+============================================================+
-| ``--micro-image``        | Precomputed microstructure image (e.g., T1w/T2w).          |
+| ``--micro-image``        | Whole-brain 3D nifti with microstructure-sensitive signal  |
 +--------------------------+------------------------------------------------------------+
 | ``--anat-dir``           | BIDS anatomical directory. Required if ``--micro-image``   |
 |                          | is not provided or if surfaces need to be created.         |
 +--------------------------+------------------------------------------------------------+
 | ``--num-surfaces``       | Number of intracortical surfaces to sample (default: 14).  |
 +--------------------------+------------------------------------------------------------+
-| ``--surface-output``     | Standard surface space for output. Supports ``fsnative``   |
-|                          | and ``fsaverage`` (default: ``fsaverage5``).               |
+| ``--surface-output``     | Standard surface space for output. Supports ``fsnative``,  |
+|                          | all ``fsaverage`` and ``fsLR32k`` (default: ``fsaverage5``)|
 +--------------------------+------------------------------------------------------------+
 | ``--ratio-type``         | Type of image to use for ratio with T1w (default: T2w).    |
 +--------------------------+------------------------------------------------------------+
