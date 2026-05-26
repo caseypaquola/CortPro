@@ -257,6 +257,7 @@ else
         singularity exec -B $SUBJECTS_DIR/:/subjects_dir \
                     -B $OUTPUT_DIR/:/out_dir \
                     -B $TOOLBOX_BIN/:/toolbox_bin \
+                    -B $FREESURFER_HOME/:/freesurfer \
                     "${SING_IMG}" \
                     /toolbox_bin/coregister_micro.sh "$SUBJECT_ID"
     fi

@@ -8,6 +8,8 @@ MICRO_TEMPLATE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-template.nii
 MICRO_IMAGE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
 MICRO_WARPED="/out_dir/${SUBJECT_ID}/${SUBJECT_ID}_space-fsnative_desc-micro.nii.gz"
 
+export FREESURFER_HOME=/freesurfer/
+
 synthseg_native() {
   mri_img=$1
   mri_str=$2
