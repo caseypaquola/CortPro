@@ -2,7 +2,7 @@
 
 SUBJECT_ID=$1
 
-FSLDIR=/opt/fsl-6.0.2/
+FSLDIR=/opt/fsl-6.0.7.1/
 T1_in_fs=/subjects_dir/${SUBJECT_ID}/mri/rawavg.mgz
 MICRO_TEMPLATE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-template.nii.gz
 MICRO_IMAGE=/out_dir/$SUBJECT_ID/"$SUBJECT_ID"_space-native_desc-micro.nii.gz
