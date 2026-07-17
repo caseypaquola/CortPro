@@ -4,5 +4,5 @@ To simplify the installation of dependencies, the toolbox uses the micapipe cont
 
 - **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/))
 - FreeSurfer with valid `license.txt` ([Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall))
-- Necessary container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
+- Necessary container: [`cortpro.sif`](https://cortpro.readthedocs.io/en/latest/pages/installation.html)
 - Optional container: [`fastsurfer_gpu.sif`](https://deep-mi.org/FastSurfer/dev/overview/singularity.html) (if FreeSurfer output is missing)
