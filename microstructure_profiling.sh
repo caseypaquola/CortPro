@@ -18,7 +18,7 @@ show_help() {
     echo "  --subjects-dir DIR         Path to Freesurfer-style SUBJECTS_DIR [required] (if the directory doesn't contain surfaces for the specified subject, Fastsurfer will be run)"
     echo "  --output-dir DIR           Output directory for toolbox results [required]"
     echo "  --fs-dir DIR               Path to the FreeSurfer directory [required] (should contain standard license file, 'license.txt')"
-    echo "  --sing-dir DIR             Path to the directory with singularities [required] (must contain micapipe-v0.2.3.simg and, if Freesurfer output is not yet available, fastsurfer_gpu.sif)"
+    echo "  --sing-dir DIR             Path to the directory with singularities [required] (must contain cortpro.sif and, if Freesurfer output is not yet available, fastsurfer_gpu.sif)"
     echo "  --num-surfaces N           Number of intracortical surfaces (default: 14)"
     echo "  --surface-output NAME      Name of standard surface for output, currently compatible with any fsaverage number (default: fsaverage5), native or fsLR32k"
     echo "  --ratio-type NAME          Type of image for ratio with T1w (default: T2w). In principle, accepts any BIDS suffix that is housed in anat"
