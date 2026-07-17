@@ -102,14 +102,4 @@ The key outputs of the toolbox are two .csv files
 
 ## ⚙️ Installation
 
-1. **Clone the repository**:
-```bash
-git clone https://github.com/yourorg/CortPro.git
-cd CortPro
-```
-
-2. **Check dependencies**:
-- **Singularity** installed and available on `$PATH` ([see installation instructions here](https://sylabs.io/guides/latest/user-guide/))
-- FreeSurfer with valid `license.txt` ([Download it here](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall))
-- Necessary container: [`micapipe-v0.2.3.simg`](https://micapipe.readthedocs.io/en/latest/pages/01.install/index.html)
-- Optional container: [`fastsurfer_gpu.sif`](https://deep-mi.org/FastSurfer/dev/overview/singularity.html) (if FreeSurfer output is missing)
+[https://cortpro.readthedocs.io/en/latest/pages/installation.html](url)
