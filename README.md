@@ -102,4 +102,4 @@ The key outputs of the toolbox are two .csv files
 
 ## ⚙️ Installation
 
-[Head to our up-to-date installation page on ReadTheDocs]([url](https://cortpro.readthedocs.io/en/latest/pages/installation.html))
+[Head to our up-to-date installation page on ReadTheDocs](https://cortpro.readthedocs.io/en/latest/pages/installation.html)
