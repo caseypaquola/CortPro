@@ -96,7 +96,7 @@ Troubleshooting
 
 - **Singularity not found** → Ensure it is installed and available on your ``$PATH``.  
 - **FreeSurfer license error** → Place a valid ``license.txt`` inside your FreeSurfer directory.  
-- **Container not found** → Check that ``micapipe-v0.2.3.simg`` is in the directory specified by ``--sing-dir``.  
+- **Container not found** → Check that ``cortpro.sif`` is in the directory specified by ``--sing-dir``.  
 - **GPU errors with FastSurfer** → Confirm CUDA drivers are correctly installed and match your hardware.  
 
 -------------------------------------------------------------------------------
