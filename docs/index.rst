@@ -70,6 +70,7 @@ Tips for Getting Started
    :caption: Understanding the output
 
    pages/whattoexpect
+   pages/statistical_analysis
    pages/quality_control
 
 
