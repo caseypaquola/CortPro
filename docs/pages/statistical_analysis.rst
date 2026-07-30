@@ -198,7 +198,7 @@ Running MRIQC
 
 MRIQC is an open-source tool for assessing the quality of MRI images. In this tutorial, MRIQC is executed using a Singularity container to extract three image quality metrics from the T1-weighted structural images: SNR, CNR, and CJV. The singularity container packages all required software and dependencies into a single reproducible environment. This makes it easier to run MRIQC.
 
-   **Prerequisite**
+.. admonition:: Prerequisite
 
    Before running the script, download an MRIQC Singularity container (e.g. ``mriqc-latest.sif``) and place it in the same directory as the script, or update the script to point to its location. Instructions for obtaining the latest MRIQC container are available in the official MRIQC documentation.
 
