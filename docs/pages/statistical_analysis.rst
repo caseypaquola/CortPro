@@ -1,9 +1,9 @@
 .. _walkthrough:
 
-From data organisation to statistical analysis: a walkthrough of CortPro and investigation of the influence of image quality
+Data organisation to statistical analysis walkthrough
 ================================================
 
-This tutorial demonstrates how to combine **CortPro** with [BrainStat](https://brainstat.readthedocs.io/) to statistically evaluate how MR image quality relates to intracortical moments. It walks through the full workflow from data preparation to vertex-wise statistics.
+A walkthrough of CortPro and investigation of the influence of image quality. This tutorial demonstrates how to combine **CortPro** with `BrainStat <https://brainstat.readthedocs.io/>`_ to statistically evaluate how MR image quality relates to intracortical moments. It walks through the full workflow from data preparation to vertex-wise statistics.
 Authored by our wonderful intern, Christine Obidike (thankyou Christine!)
 
 .. contents:: Table of contents
@@ -331,7 +331,6 @@ In this section, we investigate the relationship between MRI image quality metri
 
 1) Fit a Surface Linear Model (SLM)
 2) Generate statistical maps (t-maps and q-maps)
-3) Repeat the analysis across multiple smoothing levels
 
 BrainStat fits a separate linear regression model at every cortical vertex. In this tutorial, the predictor variable is an MRI quality metric (SNR, CNR or CJV), while the response variable is the cortical moment (μ₀, μ₁ or μ₂). After fitting the model, BrainStat computes statistical maps indicating where these relationships are significant across the cortical surface.
 
@@ -500,4 +499,4 @@ BrainSpace’s conte69 cortical surface (i.e. fs_LR_32k) is used for visualizati
 .. figure:: ./images/t-statistic_map.png
    :alt: t-statistic_map.png
 
-Figure: Vertex-wise t-map showing the association between SNR and μ₀. The colours (Viridis colormap) represent the t-statistic at each cortical vertex, with brighter colours indicating larger positive t-values.
+Figure: Vertex-wise t-map showing the association between SNR and μ₀. The colours (Viridis colormap) represent the t-statistic at each cortical vertex, with brighter colours indicating larger positive t-values. The corresponding FDR-corrected q-map indicates the vertices with which a statistically significant association was detected.
