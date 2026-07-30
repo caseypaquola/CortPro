@@ -1,9 +1,10 @@
 .. _walkthrough:
 
 Data organisation to statistical analysis walkthrough
-================================================
+==============================================================
 
-A walkthrough of CortPro and investigation of the influence of image quality. This tutorial demonstrates how to combine **CortPro** with `BrainStat <https://brainstat.readthedocs.io/>`_ to statistically evaluate how MR image quality relates to intracortical moments. It walks through the full workflow from data preparation to vertex-wise statistics.
+This tutorial demonstrates how to combine **CortPro** with `BrainStat <https://brainstat.readthedocs.io/>`_ to statistically evaluate how MR image quality relates to intracortical moments. It walks through the full workflow from data preparation to vertex-wise statistics.
+
 Authored by our wonderful intern, Christine Obidike (thankyou Christine!)
 
 .. contents:: Table of contents
@@ -14,7 +15,8 @@ Authored by our wonderful intern, Christine Obidike (thankyou Christine!)
 Data Preparation
 ----------------
 
-This section consists of four steps:
+This section consists of five steps:
+
 1. Generate intracortical moments (μ₀, μ₁ and μ₂) using CortPro.
 2. Organize the extracted cortical moments into subject × vertex matrices.
 3. Convert Human Connectome Project (HCP) structural MRI data to BIDS format.
@@ -499,4 +501,4 @@ BrainSpace’s conte69 cortical surface (i.e. fs_LR_32k) is used for visualizati
 .. figure:: ./images/t-statistic_map.png
    :alt: t-statistic_map.png
 
-Figure: Vertex-wise t-map showing the association between SNR and μ₀. The colours (Viridis colormap) represent the t-statistic at each cortical vertex, with brighter colours indicating larger positive t-values. The corresponding FDR-corrected q-map indicates the vertices with which a statistically significant association was detected.
+The vertex-wise t-map shows the association between SNR and μ₀. The colours (viridis colormap) represents the t-statistic at each cortical vertex, with brighter colours indicating larger positive t-values. The corresponding FDR-corrected q-map indicates the vertices with which a statistically significant association was detected.
