@@ -17,11 +17,16 @@
 
 **Welcome to CORTPRO**
 ==========================================
-
 🧠 CortPro (**Cortical Profiler**) is an open-source toolbox for generating and analysing **intracortical microstructure profiles**.  
 It provides a flexible framework to profile cortical depth-dependent signals across imaging modalities and resolutions—from MRI to 3D histology.
 
 🚀 With only two inputs—an anatomical MRI suitable for cortical surface reconstruction (e.g., T1w) and a microstructure-sensitive image (e.g., qT1, T1w/T2w, MT)—CortPro enables reproducible microstructural mapping within the cortex.
+
+.. note::
+
+   **The Paper:**
+   Our paper on CortPro is published in *Imaging Neuroscience*. Check out the full article here: 
+   `Intracortical microstructure profiling: A cross-modal method for indexing cortical lamination <https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.1212/136084/Intracortical-microstructure-profiling-A-cross>`_.
 
 -------------------------------------------------------------------------------
 
