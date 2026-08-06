@@ -1,9 +1,13 @@
 Myelin profiles: What to expect when applying CortPro to myelin-sensitive MRI
 ============================================================================
 
-The aim of this tutorial is to provide a prototypical example of CortPro outputs, helping you understand what to expect when applying these tools to your own data.
+The aim of this tutorial is to provide a prototypical example of CortPro outputs, helping you understand what to expect when applying these tools to your own data. The principal outputs are:
 
-The Exemplar Dataset
+- Depth by vertex microstructure profiles: ${subject_id}_space-${surface_output}_desc-MP.csv
+- Vertex-wise profile moments: ${subject_id}_space-${surface_output}_desc-MPmoments.csv
+
+
+An Exemplar Dataset
 --------------------
 
 For this tutorial, we utilize the **MICA-MICs dataset** (`Royer et al., 2022 <https://pubmed.ncbi.nlm.nih.gov/36109562/>`_), which can be accessed via the `Microstructural Marketplace <https://osf.io/e6f7d/overview>`_. This dataset serves as an ideal case for myelin-sensitive MRI because it features quantitative T1 (R1) maps. 
@@ -13,7 +17,7 @@ R1 is a well-validated marker for cortical myelin content. For a deeper understa
 Visualizing the Raw Profiles
 ----------------------------
 
-At the most granular level, we begin with **intracortical profiles**. These represent the change in MRI signal within the cortical mantle from the pial surface to the white matter boundary.
+At the most granular level, we begin with **intracortical profiles** (*MP.csv). These represent the change in MRI signal within the cortical mantle from the pial surface to the white matter boundary.
 
 At the vertex level, individual profiles can be quite varied (see below, left). If we apply a parcellation scheme to the data, these profiles become consistently smoother (see below, right).
 
@@ -25,7 +29,7 @@ At the vertex level, individual profiles can be quite varied (see below, left). 
 Quantifying Shape with Central Moments
 ---------------------------------------
 
-To move from visual inspection to statistical analysis, CortPro surmises the shape of these profiles using **central moments**. This technique is inspired by classical histology work (`Schleicher, et al., 1999 <https://pubmed.ncbi.nlm.nih.gov/9918738/>`_) and provides a mathematical summary of the distribution of signal across depths. For a primer on the math, see the `Wikipedia entry on central moments <https://en.wikipedia.org/wiki/Central_moment>`_.
+To move from visual inspection to statistical analysis, CortPro surmises the shape of these profiles using **central moments** (*MPmoments.csv). This technique is inspired by classical histology work (`Schleicher, et al., 1999 <https://pubmed.ncbi.nlm.nih.gov/9918738/>`_) and provides a mathematical summary of the distribution of signal across depths. For a primer on the math, see the `Wikipedia entry on central moments <https://en.wikipedia.org/wiki/Central_moment>`_.
 
 When projecting these moments onto the cortical surface, we observe specific spatial patterns:
 
