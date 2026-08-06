@@ -24,9 +24,7 @@ It provides a flexible framework to profile cortical depth-dependent signals acr
 
 .. note::
 
-   **The Paper:**
-   Our paper on CortPro is published in *Imaging Neuroscience*. Check out the full article here: 
-   `Intracortical microstructure profiling: A cross-modal method for indexing cortical lamination <https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.1212/136084/Intracortical-microstructure-profiling-A-cross>`_.
+   Find out more in the paper, now published in Imaging Neuroscience: `Intracortical microstructure profiling: A cross-modal method for indexing cortical lamination <https://direct.mit.edu/imag/article/doi/10.1162/IMAG.a.1212/136084/Intracortical-microstructure-profiling-A-cross>`_.
 
 -------------------------------------------------------------------------------
 
@@ -41,6 +39,7 @@ What CortPro does
 - (Optional) Computation of intracortical SNR 
 
 **Key outputs include:**  
+
 - ``MP.csv`` → intensity changes across cortical depths (rows = depths, columns = vertices)  
 - ``MPmoments.csv`` → shape characterisation of profiles based on statistical moments (u0–u4)  
 
